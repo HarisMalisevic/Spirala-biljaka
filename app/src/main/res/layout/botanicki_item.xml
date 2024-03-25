@@ -25,7 +25,7 @@
             app:layout_constraintStart_toEndOf="@+id/constraintLayout_Slika"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_default="percent"
-            app:layout_constraintWidth_percent="0.6">
+            app:layout_constraintWidth_percent="0.7">
 
             <TextView
                 android:id="@+id/nazivItem"
@@ -35,6 +35,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
+                android:breakStrategy="simple"
+                android:hyphenationFrequency="none"
                 android:text="@string/naziv_biljke"
                 android:textAlignment="center"
                 app:layout_constraintBottom_toTopOf="@+id/porodicaItem"
@@ -50,6 +52,8 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
+                android:breakStrategy="simple"
+                android:hyphenationFrequency="none"
                 android:text="@string/porodica"
                 android:textAlignment="center"
                 app:layout_constraintBottom_toTopOf="@+id/klimatskiTipItem"
@@ -64,12 +68,14 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
+                android:hyphenationFrequency="none"
                 android:text="@string/zemljisni_tip"
                 android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/klimatskiTipItem" />
+                app:layout_constraintTop_toBottomOf="@+id/klimatskiTipItem"
+                android:breakStrategy="simple" />
 
             <TextView
                 android:id="@+id/klimatskiTipItem"
@@ -78,6 +84,8 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
+                android:breakStrategy="simple"
+                android:hyphenationFrequency="none"
                 android:text="@string/klimatski_tip"
                 android:textAlignment="center"
                 app:layout_constraintBottom_toTopOf="@+id/zemljisniTipItem"
@@ -99,12 +107,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_default="percent"
-            app:layout_constraintWidth_percent="0.4">
+            app:layout_constraintWidth_percent="0.3">
 
             <ImageView
                 android:id="@+id/slikaItem"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"

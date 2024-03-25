@@ -18,9 +18,9 @@ class BiljkeRVAdapter(private var biljke: List<Biljka>) :
     private var currentView = medicinskiView
 
 
-    public fun setCurrentView(value: Int) {
-            this.currentView = value
-        }
+    fun setCurrentView(value: Int) {
+        this.currentView = value
+    }
 
 
     override fun getItemViewType(position: Int): Int {
@@ -31,24 +31,21 @@ class BiljkeRVAdapter(private var biljke: List<Biljka>) :
 
         when (viewType) {
             medicinskiView -> {
-                val view: View =
-                    LayoutInflater.from(parent.context)
-                        .inflate(R.layout.medicinski_item, parent, false)
+                val view: View = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.medicinski_item, parent, false)
 
                 return MedicinskiViewHolder(view)
             }
 
             kuharskiView -> {
-                val view: View =
-                    LayoutInflater.from(parent.context)
-                        .inflate(R.layout.kuharski_item, parent, false)
+                val view: View = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.kuharski_item, parent, false)
                 return KuharskiViewHolder(view)
             }
 
             botanickiView -> {
-                val view: View =
-                    LayoutInflater.from(parent.context)
-                        .inflate(R.layout.botanicki_item, parent, false)
+                val view: View = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.botanicki_item, parent, false)
 
                 return BotanickiViewHolder(view)
             }
@@ -68,22 +65,29 @@ class BiljkeRVAdapter(private var biljke: List<Biljka>) :
                 val medicinskiVH: MedicinskiViewHolder = holder as MedicinskiViewHolder
                 medicinskiVH.naziv.text = item.naziv
                 medicinskiVH.upozorenje.text = item.medicinskoUpozorenje
-                medicinskiVH.korist1.text = item.medicinskeKoristi[0].opis
-                medicinskiVH.korist2.text = item.medicinskeKoristi[1].opis
-                //medicinskiVH.korist3.text = item.medicinskeKoristi[2].opis
+                if (item.medicinskeKoristi.size > 0) medicinskiVH.korist1.text =
+                    item.medicinskeKoristi[0].opis
+                else medicinskiVH.korist1.text = ""
+                if (item.medicinskeKoristi.size > 1) medicinskiVH.korist2.text =
+                    item.medicinskeKoristi[1].opis
+                else medicinskiVH.korist2.text = ""
+                if (item.medicinskeKoristi.size > 2) medicinskiVH.korist3.text =
+                    item.medicinskeKoristi[2].opis
+                else medicinskiVH.korist3.text = ""
 
-                // TODO: Snaci se sa manjim brojem koristi
             }
 
             kuharskiView -> {
                 val kuharskiVH: KuharskiViewHolder = holder as KuharskiViewHolder
                 kuharskiVH.naziv.text = item.naziv
                 kuharskiVH.profilOkusa.text = item.medicinskoUpozorenje
-                kuharskiVH.jelo1.text = item.jela[0]
-                //kuharskiVH.jelo2.text = item.jela[1]
-                //kuharskiVH.jelo3.text = item.jela[2]
+                if (item.jela.size > 0) kuharskiVH.jelo1.text = item.jela[0]
+                else kuharskiVH.jelo1.text = ""
+                if (item.jela.size > 1) kuharskiVH.jelo2.text = item.jela[1]
+                else kuharskiVH.jelo2.text = ""
+                if (item.jela.size > 2) kuharskiVH.jelo3.text = item.jela[2]
+                else kuharskiVH.jelo3.text = ""
 
-                // TODO: Snaci se sa manjim brojem jela
             }
 
             botanickiView -> {
@@ -114,6 +118,13 @@ class BiljkeRVAdapter(private var biljke: List<Biljka>) :
         var korist1: TextView = itemView.findViewById(R.id.korist1Item)
         var korist2: TextView = itemView.findViewById(R.id.korist2Item)
         var korist3: TextView = itemView.findViewById(R.id.korist3Item)
+
+        init {
+            itemView.setOnClickListener{
+                // TODO: Pozvati neku metodu iz main klase
+            }
+        }
+
     }
 
     inner class KuharskiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
