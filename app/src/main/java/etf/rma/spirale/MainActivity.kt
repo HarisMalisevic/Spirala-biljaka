@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
 
-
     private lateinit var biljkeRecyclerView: RecyclerView
     private lateinit var biljkeRVAdapter: BiljkeRVAdapter
 
@@ -36,17 +35,14 @@ class MainActivity : AppCompatActivity() {
         setupModSpinner()
         setupBiljkeRecyclerView()
 
-        listFiltered = true
-        filteredBiljke = filterKuharskiBiljke(defaultBiljke, defaultBiljke[0])
-
-        refreshDisplayedBiljke()
+        kuharskiClick(defaultBiljke[0])
 
     }
 
     private fun setupResetBtn() {
-        resetBtn = findViewById<Button>(R.id.resetBtn)
+        resetBtn = findViewById(R.id.resetBtn)
 
-        resetBtn.setOnClickListener{
+        resetBtn.setOnClickListener {
             listFiltered = false
             filteredBiljke = defaultBiljke
 
@@ -70,9 +66,7 @@ class MainActivity : AppCompatActivity() {
         modSpinner = findViewById(R.id.modSpinner)
 
         ArrayAdapter.createFromResource(
-            this,
-            R.array.mod_Spinner_options,
-            android.R.layout.simple_spinner_item
+            this, R.array.mod_Spinner_options, android.R.layout.simple_spinner_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             modSpinner.adapter = adapter
@@ -80,10 +74,7 @@ class MainActivity : AppCompatActivity() {
 
         modSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
+                parent: AdapterView<*>, view: View?, position: Int, id: Long
             ) {
                 currentMode = when (position) {
                     0 -> medicinskiMod
@@ -110,8 +101,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun filterMedicinskiBiljke(
-        biljkeList: List<Biljka>,
-        referenceBiljka: Biljka
+        biljkeList: List<Biljka>, referenceBiljka: Biljka
     ): List<Biljka> {
         val referenceMedicinskaKorist: Set<MedicinskaKorist> =
             referenceBiljka.medicinskeKoristi.toSet()
@@ -119,13 +109,11 @@ class MainActivity : AppCompatActivity() {
         val filteredBiljke = biljkeList.filter { biljka ->
             biljka.medicinskeKoristi.intersect(referenceMedicinskaKorist).isNotEmpty()
         }
-
         return filteredBiljke
     }
 
     private fun filterKuharskiBiljke(
-        biljkeList: List<Biljka>,
-        referenceBiljka: Biljka
+        biljkeList: List<Biljka>, referenceBiljka: Biljka
     ): List<Biljka> {
         val referenceJela: Set<String> = referenceBiljka.jela.toSet()
         val referenceProfilOkusa: ProfilOkusaBiljke = referenceBiljka.profilOkusa
@@ -141,8 +129,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun filterBotanickiBiljke(
-        biljkeList: List<Biljka>,
-        referenceBiljka: Biljka
+        biljkeList: List<Biljka>, referenceBiljka: Biljka
     ): List<Biljka> {
         val referenceKlimatskiTip: Set<KlimatskiTip> = referenceBiljka.klimatskiTipovi.toSet()
         val referenceZemljiste: Set<Zemljiste> = referenceBiljka.zemljisniTipovi.toSet()
@@ -156,5 +143,24 @@ class MainActivity : AppCompatActivity() {
 
         return filteredBiljke
     }
+
+    fun medicinskiClick(referenceBiljka: Biljka) {
+        filteredBiljke = filterMedicinskiBiljke(defaultBiljke, referenceBiljka)
+        listFiltered = true
+        refreshDisplayedBiljke()
+    }
+
+    fun kuharskiClick(referenceBiljka: Biljka) {
+        filteredBiljke = filterKuharskiBiljke(defaultBiljke, referenceBiljka)
+        listFiltered = true
+        refreshDisplayedBiljke()
+    }
+
+    fun botanickiClick(referenceBiljka: Biljka) {
+        filteredBiljke = filterBotanickiBiljke(defaultBiljke, referenceBiljka)
+        listFiltered = true
+        refreshDisplayedBiljke()
+    }
+
 
 }

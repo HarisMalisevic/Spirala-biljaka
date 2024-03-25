@@ -118,13 +118,6 @@ class BiljkeRVAdapter(private var biljke: List<Biljka>) :
         var korist1: TextView = itemView.findViewById(R.id.korist1Item)
         var korist2: TextView = itemView.findViewById(R.id.korist2Item)
         var korist3: TextView = itemView.findViewById(R.id.korist3Item)
-
-        init {
-            itemView.setOnClickListener{
-                // TODO: Pozvati neku metodu iz main klase
-            }
-        }
-
     }
 
     inner class KuharskiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
