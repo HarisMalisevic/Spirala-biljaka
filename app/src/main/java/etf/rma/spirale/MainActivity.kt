@@ -10,7 +10,7 @@ import android.widget.Spinner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
 
     private lateinit var biljkeRecyclerView: RecyclerView
     private lateinit var biljkeRVAdapter: BiljkeRVAdapter
@@ -35,8 +35,6 @@ class MainActivity : AppCompatActivity() {
         setupModSpinner()
         setupBiljkeRecyclerView()
 
-        kuharskiClick(defaultBiljke[0])
-
     }
 
     private fun setupResetBtn() {
@@ -57,7 +55,9 @@ class MainActivity : AppCompatActivity() {
             this, LinearLayoutManager.VERTICAL, false
         )
 
-        biljkeRVAdapter = BiljkeRVAdapter(defaultBiljke)
+
+
+        biljkeRVAdapter = BiljkeRVAdapter(defaultBiljke, this)
         biljkeRVAdapter.setCurrentView(currentMode)
         biljkeRecyclerView.adapter = biljkeRVAdapter
     }
@@ -135,32 +135,44 @@ class MainActivity : AppCompatActivity() {
         val referenceZemljiste: Set<Zemljiste> = referenceBiljka.zemljisniTipovi.toSet()
 
         val filteredBiljke = biljkeList.filter { biljka ->
-            val biljkaJelaSet = biljka.jela.toSet()
-            val hasCommonKlimatskiTip = biljkaJelaSet.intersect(referenceKlimatskiTip).isNotEmpty()
-            val hasCommonZemljiste = biljkaJelaSet.intersect(referenceZemljiste).isNotEmpty()
-            (hasCommonKlimatskiTip || hasCommonZemljiste)
+            val biljkaKlimatskiTipSet = biljka.klimatskiTipovi.toSet()
+            val biljkaZemljisteSet = biljka.zemljisniTipovi.toSet()
+            val hasCommonKlimatskiTip = biljkaKlimatskiTipSet.intersect(referenceKlimatskiTip).isNotEmpty()
+            val hasCommonZemljiste = biljkaZemljisteSet.intersect(referenceZemljiste).isNotEmpty()
+            (hasCommonKlimatskiTip && hasCommonZemljiste)
         }
 
         return filteredBiljke
     }
 
-    fun medicinskiClick(referenceBiljka: Biljka) {
+    private fun medicinskiClick(referenceBiljka: Biljka) {
         filteredBiljke = filterMedicinskiBiljke(defaultBiljke, referenceBiljka)
         listFiltered = true
         refreshDisplayedBiljke()
     }
 
-    fun kuharskiClick(referenceBiljka: Biljka) {
+    private fun kuharskiClick(referenceBiljka: Biljka) {
         filteredBiljke = filterKuharskiBiljke(defaultBiljke, referenceBiljka)
         listFiltered = true
         refreshDisplayedBiljke()
     }
 
-    fun botanickiClick(referenceBiljka: Biljka) {
+    private fun botanickiClick(referenceBiljka: Biljka) {
         filteredBiljke = filterBotanickiBiljke(defaultBiljke, referenceBiljka)
         listFiltered = true
         refreshDisplayedBiljke()
     }
 
+    override fun onItemClick(position: Int) {
+        val clickedBiljka = defaultBiljke[position]
+
+        when (currentMode) {
+            medicinskiMod -> medicinskiClick(clickedBiljka)
+            kuharskiMod -> kuharskiClick(clickedBiljka)
+            botanickiMod -> botanickiClick(clickedBiljka)
+        }
+
+    }
 
 }
+

@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 
-class BiljkeRVAdapter(private var biljke: List<Biljka>) :
+class BiljkeRVAdapter(private var biljke: List<Biljka>, private val listener: RecyclerViewEvent) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var medicinskiView: Int = R.layout.medicinski_item
@@ -80,7 +80,7 @@ class BiljkeRVAdapter(private var biljke: List<Biljka>) :
             kuharskiView -> {
                 val kuharskiVH: KuharskiViewHolder = holder as KuharskiViewHolder
                 kuharskiVH.naziv.text = item.naziv
-                kuharskiVH.profilOkusa.text = item.medicinskoUpozorenje
+                kuharskiVH.profilOkusa.text = item.profilOkusa.opis
                 if (item.jela.size > 0) kuharskiVH.jelo1.text = item.jela[0]
                 else kuharskiVH.jelo1.text = ""
                 if (item.jela.size > 1) kuharskiVH.jelo2.text = item.jela[1]
@@ -99,6 +99,7 @@ class BiljkeRVAdapter(private var biljke: List<Biljka>) :
             }
 
         }
+
     }
 
     override fun getItemCount(): Int {
@@ -112,26 +113,67 @@ class BiljkeRVAdapter(private var biljke: List<Biljka>) :
     }
 
 
-    inner class MedicinskiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class MedicinskiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
         val naziv: TextView = itemView.findViewById(R.id.nazivItem)
         var upozorenje: TextView = itemView.findViewById(R.id.upozorenjeItem)
         var korist1: TextView = itemView.findViewById(R.id.korist1Item)
         var korist2: TextView = itemView.findViewById(R.id.korist2Item)
         var korist3: TextView = itemView.findViewById(R.id.korist3Item)
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(view: View?) {
+            val position: Int = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                listener.onItemClick(position)
+            }
+        }
     }
 
-    inner class KuharskiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class KuharskiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
         val naziv: TextView = itemView.findViewById(R.id.nazivItem)
         var profilOkusa: TextView = itemView.findViewById(R.id.profilOkusaItem)
         var jelo1: TextView = itemView.findViewById(R.id.jelo1Item)
         var jelo2: TextView = itemView.findViewById(R.id.jelo2Item)
         var jelo3: TextView = itemView.findViewById(R.id.jelo3Item)
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(view: View?) {
+            val position: Int = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                listener.onItemClick(position)
+            }
+        }
     }
 
-    inner class BotanickiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class BotanickiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
         val naziv: TextView = itemView.findViewById(R.id.nazivItem)
         var porodica: TextView = itemView.findViewById(R.id.porodicaItem)
         var klimatskiTip: TextView = itemView.findViewById(R.id.klimatskiTipItem)
         var zemljisniTip: TextView = itemView.findViewById(R.id.zemljisniTipItem)
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(view: View?) {
+            val position: Int = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                listener.onItemClick(position)
+            }
+        }
     }
+
+    interface RecyclerViewEvent {
+        fun onItemClick(position: Int)
+    }
+
 }

@@ -97,7 +97,7 @@ val defaultBiljke = listOf(
         klimatskiTipovi = listOf(KlimatskiTip.SREDOZEMNA, KlimatskiTip.SUHA),
         zemljisniTipovi = listOf(Zemljiste.SLJUNOVITO, Zemljiste.KRECNJACKO)
     ), Biljka(
-        naziv = "Lavanda (Lavandula angustifolia)",
+        naziv = "LUDA Lavanda (Lavandula angustifolia)",
         porodica = "Lamiaceae (metvice)",
         medicinskoUpozorenje = "Nije preporučljivo za trudnice, dojilje i djecu mlađu od 3 godine. Također, treba izbjegavati kontakt lavanda ulja sa očima.",
         medicinskeKoristi = listOf(
@@ -105,7 +105,7 @@ val defaultBiljke = listOf(
         ),
         profilOkusa = ProfilOkusaBiljke.AROMATICNO,
         jela = listOf("Jogurt sa voćem"),
-        klimatskiTipovi = listOf(KlimatskiTip.SREDOZEMNA, KlimatskiTip.SUHA),
+        klimatskiTipovi = listOf(KlimatskiTip.SUBTROPSKA, KlimatskiTip.SREDOZEMNA, KlimatskiTip.SUHA),
         zemljisniTipovi = listOf(Zemljiste.PJESKOVITO, Zemljiste.KRECNJACKO)
     )
 )
