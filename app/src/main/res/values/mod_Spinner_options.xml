@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="mod_Spinner_options">
+        <item>Medicinski</item>
+        <item>Kuharski</item>
+        <item>Botanički</item>
+    </string-array>
+</resources>
