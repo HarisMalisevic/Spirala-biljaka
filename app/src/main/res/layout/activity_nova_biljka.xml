@@ -17,7 +17,6 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/middleCL"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.25"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -50,13 +49,13 @@
                 android:layout_height="50dp"
                 android:ems="10"
                 android:hint="@string/porodica"
+                android:importantForAutofill="no"
                 android:inputType="text"
                 android:textColorHint="#546E7A"
                 app:layout_constraintBottom_toTopOf="@+id/medicinskoUpozorenjeET"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/nazivET"
-                android:importantForAutofill="no" />
+                app:layout_constraintTop_toBottomOf="@+id/nazivET" />
 
             <EditText
                 android:id="@+id/medicinskoUpozorenjeET"
@@ -64,14 +63,14 @@
                 android:layout_height="50dp"
                 android:ems="10"
                 android:hint="@string/upozorenje"
+                android:importantForAutofill="no"
                 android:inputType="text"
                 android:textColorHint="#546E7A"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.502"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/porodicaET"
-                android:importantForAutofill="no" />
+                app:layout_constraintTop_toBottomOf="@+id/porodicaET" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -92,13 +91,14 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
+                android:contentDescription="@string/slika_nove_biljke"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/plant"
-                tools:srcCompat="@tools:sample/backgrounds/scenic[8]"
-                android:contentDescription="@string/slika_nove_biljke" />
+                app:layout_constraintVertical_bias="0.0"
+                android:src="@mipmap/plant_sample_foreground" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -241,7 +241,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/buttonsCL"
         android:layout_width="0dp"
-        android:layout_height="70dp"
+        android:layout_height="60dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"

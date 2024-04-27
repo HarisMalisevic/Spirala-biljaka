@@ -1,5 +1,6 @@
 package etf.rma.spirale
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
 
     private lateinit var modSpinner: Spinner
     private lateinit var resetBtn: Button
+    private lateinit var novaBiljkaBtn: Button
 
     private var medicinskiMod: Int = R.layout.medicinski_item
     private var kuharskiMod: Int = R.layout.kuharski_item
@@ -31,6 +33,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        setupNovaBiljkaBtn()
         setupResetBtn()
         setupModSpinner()
         setupBiljkeRecyclerView()
@@ -45,6 +48,15 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
             filteredBiljke = defaultBiljke
 
             refreshDisplayedBiljke()
+        }
+    }
+
+    private fun setupNovaBiljkaBtn() {
+        novaBiljkaBtn = findViewById(R.id.novaBiljkaBtn)
+
+        novaBiljkaBtn.setOnClickListener {
+            val intent = Intent(this, NovaBiljkaActivity::class.java)
+            startActivity(intent)
         }
     }
 
