@@ -1,6 +1,7 @@
 package etf.rma.spirale
 
-data class Biljka(
+import java.io.Serializable
+data class Biljka (
     val naziv: String,
     val porodica: String,
     val medicinskoUpozorenje: String,
@@ -9,6 +10,6 @@ data class Biljka(
     val jela: List<String>,
     val klimatskiTipovi: List<KlimatskiTip>,
     val zemljisniTipovi: List<Zemljiste>
-){
+) : Serializable{
 
 }

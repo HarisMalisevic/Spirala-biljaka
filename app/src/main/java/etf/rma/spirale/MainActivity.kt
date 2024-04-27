@@ -1,5 +1,7 @@
 package etf.rma.spirale
 
+import android.app.Activity
+import android.app.Instrumentation.ActivityResult
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +10,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -28,6 +32,12 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
 
     private var listFiltered: Boolean = false
     private var filteredBiljke: List<Biljka> = defaultBiljke
+
+    private val laucher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+        if (it.resultCode == Activity.RESULT_OK){
+            println("HOCE!!")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +66,8 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
 
         novaBiljkaBtn.setOnClickListener {
             val intent = Intent(this, NovaBiljkaActivity::class.java)
-            startActivity(intent)
+           // startActivityForResult(intent, REQUEST_CODE)
+            laucher.launch(intent)
         }
     }
 
