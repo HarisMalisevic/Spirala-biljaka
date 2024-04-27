@@ -4,16 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Beige"
     tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:outlineAmbientShadowColor="@color/Night"
         android:outlineProvider="none"
-        android:outlineSpotShadowColor="@color/Night"
         app:layout_constraintBottom_toTopOf="@+id/biljkeRV"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -41,11 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:backgroundTint="@color/Night"
             android:minHeight="64dp"
-            android:outlineAmbientShadowColor="@color/Night"
-            android:outlineSpotShadowColor="@color/Night"
-            android:popupBackground="@color/Beige"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
