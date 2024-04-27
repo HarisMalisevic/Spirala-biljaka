@@ -1,7 +1,7 @@
 package etf.rma.spirale
 
+import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.Instrumentation.ActivityResult
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +10,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
 
     private val laucher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
         if (it.resultCode == Activity.RESULT_OK){
-            println("HOCE!!")
+            insertNovaBiljka(it)
         }
     }
 
@@ -48,6 +49,13 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         setupModSpinner()
         setupBiljkeRecyclerView()
 
+    }
+
+    @SuppressLint("NewApi")
+    private fun insertNovaBiljka(it : ActivityResult){
+        val novaBiljka : Biljka = it.data?.getSerializableExtra("novaBiljka", Biljka::class.java)!!
+        defaultBiljke.add(novaBiljka)
+        refreshDisplayedBiljke()
     }
 
     private fun setupResetBtn() {

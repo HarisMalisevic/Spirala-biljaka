@@ -1,6 +1,6 @@
 package etf.rma.spirale
 
-val defaultBiljke = listOf(
+val defaultBiljke = mutableListOf(
     Biljka(
         naziv = "Bosiljak (Ocimum basilicum)",
         porodica = "Lamiaceae (usnate)",
