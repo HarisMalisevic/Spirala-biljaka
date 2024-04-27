@@ -14,4 +14,5 @@
     <string name="klimatski_tip">Klimatski Tip</string>
     <string name="porodica">Porodica</string>
     <string name="resetBtn">Reset</string>
+    <string name="nova_biljka_btnTxt">Nova biljka</string>
 </resources>
