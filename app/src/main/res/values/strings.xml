@@ -15,4 +15,9 @@
     <string name="porodica">Porodica</string>
     <string name="resetBtn">Reset</string>
     <string name="nova_biljka_btnTxt">Nova biljka</string>
+    <string name="spasi_biljku_Btn">Spasi biljku</string>
+    <string name="dodaj_jelo_Btn">Dodaj jelo</string>
+    <string name="novo_jelo_hint">Novo jelo</string>
+    <string name="uslikaj_biljku_Btn">Uslikaj biljku</string>
+    <string name="slika_nove_biljke">Slika nove biljke koja se dodaje</string>
 </resources>
