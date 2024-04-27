@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -34,26 +33,18 @@ class NovaBiljkaActivity : AppCompatActivity() {
 
     private lateinit var slikaIV: ImageView
 
-    private var jelaNoveBiljke: MutableList<String> = mutableListOf<String>()
-    private lateinit var profilOkusaNoveBiljke : ProfilOkusaBiljke
+    private var jelaNoveBiljke: MutableList<String> = mutableListOf()
+    private lateinit var profilOkusaNoveBiljke: ProfilOkusaBiljke
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_nova_biljka)
 
-        //DONE: EditText: nazivET, porodicaET, medicinskoUpozorenjeET, jeloET
-        //DONE: ListView: medicinskaKoristLV, klimatskiTipLV, zemljisniTipLV
-        //                profilOkusaLV, jelaLV
         //TODO: Button: dodajJeloBtn, dodajBiljkuBtn, uslikajBiljkuBtn
         //TODO: ImageView: slikaIV
 
-        //DONE: Popuniti medicinskaKoristLV, klimatskiTipLV i zemljisniTipLV
-        //DONE: Dodavanje novog jela u jelaLV
-
         //TODO: Slikanje biljke
-        //TODO: Validacija (setError)
-        //TODO: Dodavanje u MainActivity Listu
         //TODO: TESTIRANJE
 
 
@@ -164,40 +155,40 @@ class NovaBiljkaActivity : AppCompatActivity() {
     private fun setupDodajBiljkuBtn() {
         dodajBiljkuBtn = findViewById(R.id.dodajBiljkuBtn)
 
-        dodajBiljkuBtn.setOnClickListener() {
-            val editTextovi = listOf<EditText>(nazivET, porodicaET, medicinskoUpozorenjeET)
+        dodajBiljkuBtn.setOnClickListener{
+            val editTextovi = listOf(nazivET, porodicaET, medicinskoUpozorenjeET)
 
-            var sveIspravno: Boolean = true
+            var sveIspravno = true
 
             for (et in editTextovi) {
                 if (!validacijaEditText(et)) sveIspravno = false
             }
 
-            if (jelaLV.adapter.count == 0){
+            if (jelaLV.adapter.count == 0) {
                 Toast.makeText(this, "Nije uneseno ni jedno jelo", Toast.LENGTH_SHORT)
                     .show()
                 sveIspravno = false
             }
 
-            if (medicinskaKoristLV.checkedItemCount == 0){
+            if (medicinskaKoristLV.checkedItemCount == 0) {
                 Toast.makeText(this, "Nije odabrana ni jedna korist!", Toast.LENGTH_SHORT)
                     .show()
                 sveIspravno = false
             }
 
-            if (profilOkusaLV.checkedItemCount == 0){
+            if (profilOkusaLV.checkedItemCount == 0) {
                 Toast.makeText(this, "Nije odabran profil okusa!", Toast.LENGTH_SHORT)
                     .show()
                 sveIspravno = false
             }
 
-            if (klimatskiTipLV.checkedItemCount == 0){
+            if (klimatskiTipLV.checkedItemCount == 0) {
                 Toast.makeText(this, "Nije odabran ni jedan klimatski tip!", Toast.LENGTH_SHORT)
                     .show()
                 sveIspravno = false
             }
 
-            if (zemljisniTipLV.checkedItemCount == 0){
+            if (zemljisniTipLV.checkedItemCount == 0) {
                 Toast.makeText(this, "Nije odabran ni jedan tip zemljista!", Toast.LENGTH_SHORT)
                     .show()
                 sveIspravno = false
@@ -212,7 +203,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
             Toast.makeText(this, "Uspješno spašena biljka!", Toast.LENGTH_SHORT)
                 .show()
 
-            val novaBiljka : Biljka = kreirajPovratnuBiljku()
+            val novaBiljka: Biljka = kreirajPovratnuBiljku()
             val resultIntent = Intent()
             resultIntent.putExtra("novaBiljka", novaBiljka)
             setResult(Activity.RESULT_OK, resultIntent)
@@ -220,7 +211,6 @@ class NovaBiljkaActivity : AppCompatActivity() {
 
         }
     }
-
 
     private fun setupJeloET() {
         jeloET = findViewById(R.id.jeloET)
@@ -272,7 +262,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
         return any { it.equals(s, ignoreCase) }
     }
 
-    private fun kreirajPovratnuBiljku() : Biljka{
+    private fun kreirajPovratnuBiljku(): Biljka {
 
         val nazivNoveBiljke = nazivET.text.toString()
         val porodicaNoveBiljke = porodicaET.text.toString()
@@ -291,9 +281,10 @@ class NovaBiljkaActivity : AppCompatActivity() {
             jelaNoveBiljke,
             klimeNoveBiljke,
             zemljistaNoveBiljke
-            )
+        )
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun <T> getSelectedItems(listView: ListView): List<T>? {
         val selectedItems = mutableListOf<T>()
 
