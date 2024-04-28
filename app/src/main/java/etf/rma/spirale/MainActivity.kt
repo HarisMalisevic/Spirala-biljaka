@@ -1,5 +1,8 @@
 package etf.rma.spirale
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -7,6 +10,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -17,6 +22,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
 
     private lateinit var modSpinner: Spinner
     private lateinit var resetBtn: Button
+    private lateinit var novaBiljkaBtn: Button
 
     private var medicinskiMod: Int = R.layout.medicinski_item
     private var kuharskiMod: Int = R.layout.kuharski_item
@@ -27,14 +33,29 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
     private var listFiltered: Boolean = false
     private var filteredBiljke: List<Biljka> = defaultBiljke
 
+    private val novaBiljkaLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                insertNovaBiljka(it)
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        setupNovaBiljkaBtn()
         setupResetBtn()
         setupModSpinner()
         setupBiljkeRecyclerView()
+    }
 
+    @SuppressLint("NewApi")
+    private fun insertNovaBiljka(it: ActivityResult) {
+        val novaBiljka: Biljka = it.data?.getSerializableExtra("novaBiljka", Biljka::class.java)!!
+        defaultBiljke.add(novaBiljka)
+        listFiltered = false
+        refreshDisplayedBiljke()
     }
 
     private fun setupResetBtn() {
@@ -48,14 +69,22 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         }
     }
 
+    private fun setupNovaBiljkaBtn() {
+        novaBiljkaBtn = findViewById(R.id.novaBiljkaBtn)
+
+        novaBiljkaBtn.setOnClickListener {
+            val intent = Intent(this, NovaBiljkaActivity::class.java)
+            // startActivityForResult(intent, REQUEST_CODE)
+            novaBiljkaLauncher.launch(intent)
+        }
+    }
+
     private fun setupBiljkeRecyclerView() {
         biljkeRecyclerView = findViewById(R.id.biljkeRV)
 
         biljkeRecyclerView.layoutManager = LinearLayoutManager(
             this, LinearLayoutManager.VERTICAL, false
         )
-
-
 
         biljkeRVAdapter = BiljkeRVAdapter(defaultBiljke, this)
         biljkeRVAdapter.setCurrentView(currentMode)
@@ -137,7 +166,8 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         val filteredBiljke = biljkeList.filter { biljka ->
             val biljkaKlimatskiTipSet = biljka.klimatskiTipovi.toSet()
             val biljkaZemljisteSet = biljka.zemljisniTipovi.toSet()
-            val hasCommonKlimatskiTip = biljkaKlimatskiTipSet.intersect(referenceKlimatskiTip).isNotEmpty()
+            val hasCommonKlimatskiTip =
+                biljkaKlimatskiTipSet.intersect(referenceKlimatskiTip).isNotEmpty()
             val hasCommonZemljiste = biljkaZemljisteSet.intersect(referenceZemljiste).isNotEmpty()
             (hasCommonKlimatskiTip && hasCommonZemljiste)
         }
@@ -164,7 +194,10 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
     }
 
     override fun onItemClick(position: Int) {
-        val clickedBiljka = defaultBiljke[position]
+
+
+        val clickedBiljka: Biljka = if (listFiltered) filteredBiljke[position]
+        else defaultBiljke[position]
 
         when (currentMode) {
             medicinskiMod -> medicinskiClick(clickedBiljka)
@@ -175,4 +208,3 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
     }
 
 }
-
