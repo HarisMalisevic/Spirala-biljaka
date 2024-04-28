@@ -20,4 +20,6 @@
     <string name="novo_jelo_hint">Novo jelo</string>
     <string name="uslikaj_biljku_Btn">Uslikaj biljku</string>
     <string name="slika_nove_biljke">Slika nove biljke koja se dodaje</string>
+    <string name="dodajJeloBtn_izmijeniJelo">Izmijeni jelo</string>
+    <string name="dodajJeloBtn_dodajJelo">Dodaj jelo</string>
 </resources>

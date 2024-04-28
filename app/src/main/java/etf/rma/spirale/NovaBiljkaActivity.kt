@@ -16,7 +16,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.core.view.get
 import java.io.File
 
 
@@ -54,8 +53,6 @@ class NovaBiljkaActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_nova_biljka)
 
-        //TODO: TESTIRANJE
-
         setupNazivET()
         setupPorodicaET()
         setupMedicinskoUpozorenjeET()
@@ -64,7 +61,6 @@ class NovaBiljkaActivity : AppCompatActivity() {
         setupSlikaIV()
 
         setupJelaLV()
-        //TODO: U ListView ispisati Opise umjesto ENUM naziva!!
         setupMedicinskaKoristLV()
         setupKlimatskiTipLV()
         setupZemljisniTipLV()
@@ -164,9 +160,9 @@ class NovaBiljkaActivity : AppCompatActivity() {
         }
     }
 
-    private fun dodajJeloBtn_editMode(position: Int){
+    private fun dodajJeloBtnEditMode(position: Int){
 
-        dodajJeloBtn.text = "Izmijeni jelo"
+        dodajJeloBtn.text = getString(R.string.dodajJeloBtn_izmijeniJelo)
 
         val odabranoJelo : String = jelaNoveBiljke[position]
 
@@ -184,7 +180,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
             if (novoJelo == jelaNoveBiljke[position]){
 
                 jeloET.text.clear()
-                dodajJeloBtn.text = "Dodaj jelo"
+                dodajJeloBtn.text = getString(R.string.dodajJeloBtn_dodajJelo)
             }
 
             if (jelaNoveBiljke.contains(novoJelo, true)) {
@@ -203,7 +199,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
             Toast.makeText(this, "Jelo dodato", Toast.LENGTH_SHORT).show()
 
             jeloET.text.clear()
-            dodajJeloBtn.text = "Dodaj jelo"
+            dodajJeloBtn.text = getString(R.string.dodajJeloBtn_dodajJelo)
 
         }
     }
@@ -309,7 +305,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
         jelaLV.onItemClickListener = AdapterView.OnItemClickListener{ _, _, position, _ ->
 
 
-            dodajJeloBtn_editMode(position)
+            dodajJeloBtnEditMode(position)
 
         }
 
