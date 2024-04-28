@@ -16,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.core.view.get
 import java.io.File
 
 
@@ -33,9 +34,9 @@ class NovaBiljkaActivity : AppCompatActivity() {
     private lateinit var profilOkusaLV: ListView
     private lateinit var jelaLV: ListView
 
-    private lateinit var dodajJeloBtn: Button
     private lateinit var dodajBiljkuBtn: Button
     private lateinit var uslikajBiljkuBtn: Button
+    private lateinit var dodajJeloBtn: Button
 
     private lateinit var slikaIV: ImageView
 
@@ -163,6 +164,50 @@ class NovaBiljkaActivity : AppCompatActivity() {
         }
     }
 
+    private fun dodajJeloBtn_editMode(position: Int){
+
+        dodajJeloBtn.text = "Izmijeni jelo"
+
+        val odabranoJelo : String = jelaNoveBiljke[position]
+
+        jeloET.setText(odabranoJelo)
+
+        dodajJeloBtn.setOnClickListener {
+
+            if (!validacijaEditText(jeloET)) {
+                return@setOnClickListener
+            }
+
+
+            val novoJelo: String = jeloET.text.toString()
+
+            if (novoJelo == jelaNoveBiljke[position]){
+
+                jeloET.text.clear()
+                dodajJeloBtn.text = "Dodaj jelo"
+            }
+
+            if (jelaNoveBiljke.contains(novoJelo, true)) {
+                jeloET.error = "Jelo vec postoji!"
+                return@setOnClickListener
+            }
+
+            jelaNoveBiljke[position] = novoJelo
+
+            val arrayAdapter: ArrayAdapter<String> = ArrayAdapter(
+                this, android.R.layout.simple_list_item_1, jelaNoveBiljke
+            )
+
+            jelaLV.adapter = arrayAdapter
+
+            Toast.makeText(this, "Jelo dodato", Toast.LENGTH_SHORT).show()
+
+            jeloET.text.clear()
+            dodajJeloBtn.text = "Dodaj jelo"
+
+        }
+    }
+
     private fun setupDodajBiljkuBtn() {
         dodajBiljkuBtn = findViewById(R.id.dodajBiljkuBtn)
 
@@ -261,6 +306,13 @@ class NovaBiljkaActivity : AppCompatActivity() {
 
         jelaLV.adapter = arrayAdapter
 
+        jelaLV.onItemClickListener = AdapterView.OnItemClickListener{ _, _, position, _ ->
+
+
+            dodajJeloBtn_editMode(position)
+
+        }
+
     }
 
     private fun setupSlikaIV() {
@@ -315,7 +367,6 @@ class NovaBiljkaActivity : AppCompatActivity() {
 
     private fun <T> getSelectedItems(listView: ListView, enumEntries: List<T>): List<T> {
         val selectedItems = mutableListOf<T>()
-
 
         // Get the SparseBooleanArray of checked items
         val checkedItems = listView.checkedItemPositions
