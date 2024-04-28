@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
     private var listFiltered: Boolean = false
     private var filteredBiljke: List<Biljka> = defaultBiljke
 
-    private val laucher =
+    private val novaBiljkaLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
                 insertNovaBiljka(it)
@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         novaBiljkaBtn.setOnClickListener {
             val intent = Intent(this, NovaBiljkaActivity::class.java)
             // startActivityForResult(intent, REQUEST_CODE)
-            laucher.launch(intent)
+            novaBiljkaLauncher.launch(intent)
         }
     }
 

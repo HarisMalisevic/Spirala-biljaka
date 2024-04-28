@@ -2,6 +2,8 @@ package etf.rma.spirale
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -10,7 +12,11 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ListView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import java.io.File
 
 
 class NovaBiljkaActivity : AppCompatActivity() {
@@ -36,13 +42,18 @@ class NovaBiljkaActivity : AppCompatActivity() {
     private var jelaNoveBiljke: MutableList<String> = mutableListOf()
     private lateinit var profilOkusaNoveBiljke: ProfilOkusaBiljke
 
+    private lateinit var imageURI: Uri
+    private val takePhotoContract =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) {
+            slikaIV.setImageURI(null)
+            slikaIV.setImageURI(imageURI)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_nova_biljka)
 
-        //TODO: Button: dodajJeloBtn, dodajBiljkuBtn, uslikajBiljkuBtn
-        //TODO: ImageView: slikaIV
+        //TODO: Button: uslikajBiljkuBtn
 
         //TODO: Slikanje biljke
         //TODO: TESTIRANJE
@@ -53,6 +64,8 @@ class NovaBiljkaActivity : AppCompatActivity() {
         setupMedicinskoUpozorenjeET()
         setupJeloET()
 
+        setupSlikaIV()
+
         setupJelaLV()
         setupMedicinskaKoristLV()
         setupKlimatskiTipLV()
@@ -61,6 +74,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
 
         setupDodajJeloBtn()
         setupDodajBiljkuBtn()
+        setupUslikajBiljkuBtn()
     }
 
     private fun setupMedicinskaKoristLV() {
@@ -115,10 +129,9 @@ class NovaBiljkaActivity : AppCompatActivity() {
 
         profilOkusaLV.choiceMode = ListView.CHOICE_MODE_SINGLE
 
-        profilOkusaLV.onItemClickListener =
-            AdapterView.OnItemClickListener { _, _, position, _ ->
-                profilOkusaNoveBiljke = ProfilOkusaBiljke.entries[position]
-            }
+        profilOkusaLV.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+            profilOkusaNoveBiljke = ProfilOkusaBiljke.entries[position]
+        }
 
 
     }
@@ -155,7 +168,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
     private fun setupDodajBiljkuBtn() {
         dodajBiljkuBtn = findViewById(R.id.dodajBiljkuBtn)
 
-        dodajBiljkuBtn.setOnClickListener{
+        dodajBiljkuBtn.setOnClickListener {
             val editTextovi = listOf(nazivET, porodicaET, medicinskoUpozorenjeET)
 
             var sveIspravno = true
@@ -165,20 +178,17 @@ class NovaBiljkaActivity : AppCompatActivity() {
             }
 
             if (jelaLV.adapter.count == 0) {
-                Toast.makeText(this, "Nije uneseno ni jedno jelo", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this, "Nije uneseno ni jedno jelo", Toast.LENGTH_SHORT).show()
                 sveIspravno = false
             }
 
             if (medicinskaKoristLV.checkedItemCount == 0) {
-                Toast.makeText(this, "Nije odabrana ni jedna korist!", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this, "Nije odabrana ni jedna korist!", Toast.LENGTH_SHORT).show()
                 sveIspravno = false
             }
 
             if (profilOkusaLV.checkedItemCount == 0) {
-                Toast.makeText(this, "Nije odabran profil okusa!", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this, "Nije odabran profil okusa!", Toast.LENGTH_SHORT).show()
                 sveIspravno = false
             }
 
@@ -195,13 +205,11 @@ class NovaBiljkaActivity : AppCompatActivity() {
             }
 
             if (!sveIspravno) {
-                Toast.makeText(this, "Neko polje nije ispravno!", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this, "Neko polje nije ispravno!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            Toast.makeText(this, "Uspješno spašena biljka!", Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(this, "Uspješno spašena biljka!", Toast.LENGTH_SHORT).show()
 
             val novaBiljka: Biljka = kreirajPovratnuBiljku()
             val resultIntent = Intent()
@@ -209,6 +217,24 @@ class NovaBiljkaActivity : AppCompatActivity() {
             setResult(Activity.RESULT_OK, resultIntent)
             finish()
 
+        }
+    }
+
+    private fun setupUslikajBiljkuBtn() {
+        uslikajBiljkuBtn = findViewById(R.id.uslikajBiljkuBtn)
+
+        uslikajBiljkuBtn.setOnClickListener {
+
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                Toast.makeText(this, "Camera permision not granted!", Toast.LENGTH_SHORT).show()
+                requestPermissions(arrayOf(android.Manifest.permission.CAMERA), 400) // TODO: Ekstraktovati
+            }
+
+            takePhotoContract.launch(imageURI)
         }
     }
 
@@ -239,6 +265,13 @@ class NovaBiljkaActivity : AppCompatActivity() {
 
     }
 
+    private fun setupSlikaIV() {
+
+        imageURI = createImageURI()
+
+        slikaIV = findViewById(R.id.slikaIV)
+        slikaIV.setImageResource(R.mipmap.plant_sample_foreground)
+    }
 
     private fun validacijaEditText(editText: EditText): Boolean {
 
@@ -256,9 +289,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
         return true
     }
 
-
     private fun MutableList<String>.contains(s: String, ignoreCase: Boolean = false): Boolean {
-
         return any { it.equals(s, ignoreCase) }
     }
 
@@ -304,6 +335,11 @@ class NovaBiljkaActivity : AppCompatActivity() {
 
 
         return selectedItems
+    }
+
+    private fun createImageURI(): Uri {
+        val image = File(filesDir, "camera_photos.png")
+        return FileProvider.getUriForFile(this, "etf.rma.spirale.FileProvider", image)
     }
 
 }
