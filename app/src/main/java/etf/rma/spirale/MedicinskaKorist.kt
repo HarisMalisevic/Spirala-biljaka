@@ -8,3 +8,4 @@ enum class MedicinskaKorist(val opis: String) {
     REGULACIJAPROBAVE("Regulacija probave"),
     PODRSKAIMUNITETU("Podrška imunitetu"),
 }
+
