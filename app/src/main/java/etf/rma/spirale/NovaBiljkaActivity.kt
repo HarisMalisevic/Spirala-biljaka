@@ -77,11 +77,12 @@ class NovaBiljkaActivity : AppCompatActivity() {
     private fun setupMedicinskaKoristLV() {
         medicinskaKoristLV = findViewById(R.id.medicinskaKoristLV)
 
-        val medicinskeKoristi: Array<MedicinskaKorist> = MedicinskaKorist.entries.toTypedArray()
+        val medicinskeKoristiString : List<String> = MedicinskaKorist.getOpisList()
 
-        val arrayAdapter: ArrayAdapter<MedicinskaKorist> = ArrayAdapter(
-            this, android.R.layout.simple_list_item_multiple_choice, medicinskeKoristi
+        val arrayAdapter: ArrayAdapter<String> = ArrayAdapter(
+            this, android.R.layout.simple_list_item_multiple_choice, medicinskeKoristiString.toTypedArray()
         )
+
         medicinskaKoristLV.adapter = arrayAdapter
         medicinskaKoristLV.choiceMode = ListView.CHOICE_MODE_MULTIPLE
 
@@ -90,10 +91,10 @@ class NovaBiljkaActivity : AppCompatActivity() {
     private fun setupKlimatskiTipLV() {
         klimatskiTipLV = findViewById(R.id.klimatskiTipLV)
 
-        val klimatskiTipovi: Array<KlimatskiTip> = KlimatskiTip.entries.toTypedArray()
+        val klimatskiTipoviString: List<String> = KlimatskiTip.getOpisList()
 
-        val arrayAdapter: ArrayAdapter<KlimatskiTip> = ArrayAdapter(
-            this, android.R.layout.simple_list_item_multiple_choice, klimatskiTipovi
+        val arrayAdapter: ArrayAdapter<String> = ArrayAdapter(
+            this, android.R.layout.simple_list_item_multiple_choice, klimatskiTipoviString.toTypedArray()
         )
         klimatskiTipLV.adapter = arrayAdapter
         klimatskiTipLV.choiceMode = ListView.CHOICE_MODE_MULTIPLE
@@ -103,10 +104,10 @@ class NovaBiljkaActivity : AppCompatActivity() {
     private fun setupZemljisniTipLV() {
         zemljisniTipLV = findViewById(R.id.zemljisniTipLV)
 
-        val zemljisniTipovi: Array<Zemljiste> = Zemljiste.entries.toTypedArray()
+        val zemljisniTipoviString: List<String> = Zemljiste.getOpisList()
 
-        val arrayAdapter: ArrayAdapter<Zemljiste> = ArrayAdapter(
-            this, android.R.layout.simple_list_item_multiple_choice, zemljisniTipovi
+        val arrayAdapter: ArrayAdapter<String> = ArrayAdapter(
+            this, android.R.layout.simple_list_item_multiple_choice, zemljisniTipoviString.toTypedArray()
         )
 
         zemljisniTipLV.adapter = arrayAdapter
@@ -116,16 +117,14 @@ class NovaBiljkaActivity : AppCompatActivity() {
     private fun setupProfilOkusaLV() {
         profilOkusaLV = findViewById(R.id.profilOkusaLV)
 
-        val profiliOkusa: Array<ProfilOkusaBiljke> = ProfilOkusaBiljke.entries.toTypedArray()
+        val profiliOkusaString: List<String> = ProfilOkusaBiljke.getOpisList()
 
-        val arrayAdapter: ArrayAdapter<ProfilOkusaBiljke> = ArrayAdapter(
-            this, android.R.layout.simple_list_item_single_choice, profiliOkusa
+        val arrayAdapter: ArrayAdapter<String> = ArrayAdapter(
+            this, android.R.layout.simple_list_item_single_choice, profiliOkusaString.toTypedArray()
         )
 
         profilOkusaLV.adapter = arrayAdapter
-
         profilOkusaLV.choiceMode = ListView.CHOICE_MODE_SINGLE
-
         profilOkusaLV.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             profilOkusaNoveBiljke = ProfilOkusaBiljke.entries[position]
         }
@@ -298,9 +297,9 @@ class NovaBiljkaActivity : AppCompatActivity() {
         val porodicaNoveBiljke = porodicaET.text.toString()
         val upozorenjeNoveBiljke = medicinskoUpozorenjeET.text.toString()
 
-        val medKoristiNoveBiljke = getSelectedItems<MedicinskaKorist>(medicinskaKoristLV)!!
-        val klimeNoveBiljke = getSelectedItems<KlimatskiTip>(klimatskiTipLV)!!
-        val zemljistaNoveBiljke = getSelectedItems<Zemljiste>(zemljisniTipLV)!!
+        val medKoristiNoveBiljke = getSelectedItems(medicinskaKoristLV, MedicinskaKorist.entries)
+        val klimeNoveBiljke = getSelectedItems(klimatskiTipLV, KlimatskiTip.entries)
+        val zemljistaNoveBiljke = getSelectedItems(zemljisniTipLV, Zemljiste.entries)
 
         return Biljka(
             nazivNoveBiljke,
@@ -314,12 +313,9 @@ class NovaBiljkaActivity : AppCompatActivity() {
         )
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun <T> getSelectedItems(listView: ListView): List<T>? {
+    private fun <T> getSelectedItems(listView: ListView, enumEntries: List<T>): List<T> {
         val selectedItems = mutableListOf<T>()
 
-        // Get the adapter associated with the ListView
-        val adapter = (listView.adapter as? ArrayAdapter<T>) ?: return null
 
         // Get the SparseBooleanArray of checked items
         val checkedItems = listView.checkedItemPositions
@@ -328,11 +324,9 @@ class NovaBiljkaActivity : AppCompatActivity() {
         for (i in 0 until checkedItems.size()) {
             val position = checkedItems.keyAt(i)
             if (checkedItems.valueAt(i)) {
-                selectedItems.add(adapter.getItem(position)!!)
+                selectedItems.add(enumEntries[position])
             }
         }
-
-
         return selectedItems
     }
 
