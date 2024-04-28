@@ -6,6 +6,14 @@ enum class MedicinskaKorist(val opis: String) {
     PROTIVBOLOVA("Protivbolova - za smanjenje bolova"),
     REGULACIJAPRITISKA("Regulacija pritiska - za regulaciju visokog/niskog pritiska"),
     REGULACIJAPROBAVE("Regulacija probave"),
-    PODRSKAIMUNITETU("Podrška imunitetu"),
+    PODRSKAIMUNITETU("Podrška imunitetu");
+
+    companion object{
+         fun getOpisList(): List<String> {
+            return entries.map {
+                it.opis
+            }
+        }
+    }
 }
 
