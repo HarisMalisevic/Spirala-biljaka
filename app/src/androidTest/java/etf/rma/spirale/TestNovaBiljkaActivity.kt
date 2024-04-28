@@ -165,6 +165,41 @@ class TestNovaBiljkaActivity {
 
     }
 
+    @Test
+    fun testIspravnaBiljka() {
+        onView(withId(R.id.novaBiljkaBtn)).perform(click())
+
+        onView(withId(R.id.nazivET)).perform(
+            typeText("Luda Lavanda"), closeSoftKeyboard()
+        )
+        onView(withId(R.id.porodicaET)).perform(
+            typeText("Ludae"), closeSoftKeyboard()
+        )
+        onView(withId(R.id.medicinskoUpozorenjeET)).perform(
+            typeText("Luda je!"), closeSoftKeyboard()
+        )
+
+        onView(withId(R.id.jeloET)).perform(typeText("Mmmmm"), closeSoftKeyboard())
+        onView(withId(R.id.dodajJeloBtn)).perform(click())
+        onView(withId(R.id.jeloET)).check(matches(hasNoErrorText()))
+        onView(withId(R.id.jeloET)).perform(clearText())
+
+        onView(withId(R.id.jeloET)).perform(typeText("Bljak!"), closeSoftKeyboard())
+        onView(withId(R.id.dodajJeloBtn)).perform(click())
+        onView(withId(R.id.jeloET)).check(matches(hasNoErrorText()))
+        onView(withId(R.id.jeloET)).perform(clearText())
+
+        onData(anything()).inAdapterView(withId(R.id.medicinskaKoristLV)).atPosition(1).perform(click())
+        onData(anything()).inAdapterView(withId(R.id.klimatskiTipLV)).atPosition(0).perform(click())
+        onData(anything()).inAdapterView(withId(R.id.zemljisniTipLV)).atPosition(0).perform(click())
+        onData(anything()).inAdapterView(withId(R.id.zemljisniTipLV)).atPosition(1).perform(click())
+
+        onData(anything()).inAdapterView(withId(R.id.profilOkusaLV)).atPosition(0).perform(click())
+
+        onView(withId(R.id.dodajBiljkuBtn)).perform(click())
+
+    }
+
 //    @Test
 //    fun testOdabirIzEnuma() {
 //        onView(withId(R.id.novaBiljkaBtn)).perform(click())
