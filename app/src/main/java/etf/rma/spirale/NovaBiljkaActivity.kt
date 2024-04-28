@@ -249,6 +249,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
             }
 
             if (!sveIspravno) {
+                Toast.makeText(this, "Nije odabrano dovoljno opcija", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 

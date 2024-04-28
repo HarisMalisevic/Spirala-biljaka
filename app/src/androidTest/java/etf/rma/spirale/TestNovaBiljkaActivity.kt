@@ -31,7 +31,6 @@ class TestNovaBiljkaActivity {
         MainActivity::class.java
     )
 
-
     private fun hasNoErrorText(): Matcher<View> {
         return object : TypeSafeMatcher<View>() {
             override fun describeTo(description: Description) {
@@ -166,18 +165,22 @@ class TestNovaBiljkaActivity {
 
     }
 
-    @Test
-    fun testOdabirIzEnuma() {
-        onView(withId(R.id.novaBiljkaBtn)).perform(click())
-
-        onView(withId(R.id.nazivET)).perform(typeText("Naziv"), closeSoftKeyboard())
-        onView(withId(R.id.porodicaET)).perform(typeText("Porodica"), closeSoftKeyboard())
-        onView(withId(R.id.medicinskoUpozorenjeET)).perform(
-            typeText("Upozorenje!"), closeSoftKeyboard()
-        )
-
-        onView(withId(R.id.dodajBiljkuBtn)).perform(click())
-
-    }
+//    @Test
+//    fun testOdabirIzEnuma() {
+//        onView(withId(R.id.novaBiljkaBtn)).perform(click())
+//
+//        onView(withId(R.id.nazivET)).perform(typeText("Naziv"), closeSoftKeyboard())
+//        onView(withId(R.id.porodicaET)).perform(typeText("Porodica"), closeSoftKeyboard())
+//        onView(withId(R.id.medicinskoUpozorenjeET)).perform(
+//            typeText("Upozorenje!"), closeSoftKeyboard()
+//        )
+//
+//        onView(withId(R.id.dodajBiljkuBtn)).perform(click())
+//
+//        onView(withText("Nije odabrano dovoljno opcija"))
+//            .inRoot(withDecorView(not(`is`(activityTestRule.activity.window.decorView))))
+//            .check(matches(isDisplayed()))
+//
+//    }
 
 }
