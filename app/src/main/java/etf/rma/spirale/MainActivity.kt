@@ -33,11 +33,12 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
     private var listFiltered: Boolean = false
     private var filteredBiljke: List<Biljka> = defaultBiljke
 
-    private val laucher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-        if (it.resultCode == Activity.RESULT_OK){
-            insertNovaBiljka(it)
+    private val laucher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                insertNovaBiljka(it)
+            }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,8 +52,8 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
     }
 
     @SuppressLint("NewApi")
-    private fun insertNovaBiljka(it : ActivityResult){
-        val novaBiljka : Biljka = it.data?.getSerializableExtra("novaBiljka", Biljka::class.java)!!
+    private fun insertNovaBiljka(it: ActivityResult) {
+        val novaBiljka: Biljka = it.data?.getSerializableExtra("novaBiljka", Biljka::class.java)!!
         defaultBiljke.add(novaBiljka)
         refreshDisplayedBiljke()
     }
@@ -73,7 +74,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
 
         novaBiljkaBtn.setOnClickListener {
             val intent = Intent(this, NovaBiljkaActivity::class.java)
-           // startActivityForResult(intent, REQUEST_CODE)
+            // startActivityForResult(intent, REQUEST_CODE)
             laucher.launch(intent)
         }
     }
@@ -165,7 +166,8 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         val filteredBiljke = biljkeList.filter { biljka ->
             val biljkaKlimatskiTipSet = biljka.klimatskiTipovi.toSet()
             val biljkaZemljisteSet = biljka.zemljisniTipovi.toSet()
-            val hasCommonKlimatskiTip = biljkaKlimatskiTipSet.intersect(referenceKlimatskiTip).isNotEmpty()
+            val hasCommonKlimatskiTip =
+                biljkaKlimatskiTipSet.intersect(referenceKlimatskiTip).isNotEmpty()
             val hasCommonZemljiste = biljkaZemljisteSet.intersect(referenceZemljiste).isNotEmpty()
             (hasCommonKlimatskiTip && hasCommonZemljiste)
         }
@@ -192,7 +194,10 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
     }
 
     override fun onItemClick(position: Int) {
-        val clickedBiljka = defaultBiljke[position]
+
+
+        val clickedBiljka: Biljka = if (listFiltered) filteredBiljke[position]
+        else defaultBiljke[position]
 
         when (currentMode) {
             medicinskiMod -> medicinskiClick(clickedBiljka)
