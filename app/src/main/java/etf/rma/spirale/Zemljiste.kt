@@ -10,8 +10,8 @@ enum class Zemljiste(val naziv: String) {
 
     companion object{
          fun getOpisList(): List<String> {
-            return MedicinskaKorist.entries.map {
-                it.opis
+            return entries.map {
+                it.naziv
             }
         }
     }

@@ -224,34 +224,31 @@ class NovaBiljkaActivity : AppCompatActivity() {
             }
 
             if (jelaLV.adapter.count == 0) {
-                Toast.makeText(this, "Nije uneseno ni jedno jelo", Toast.LENGTH_SHORT).show()
+                dodajBiljkuBtn.error = "Nije uneseno ni jedno jelo"
                 sveIspravno = false
             }
 
             if (medicinskaKoristLV.checkedItemCount == 0) {
-                Toast.makeText(this, "Nije odabrana ni jedna korist!", Toast.LENGTH_SHORT).show()
+                dodajBiljkuBtn.error = "Nije odabrana ni jedna korist"
                 sveIspravno = false
             }
 
             if (profilOkusaLV.checkedItemCount == 0) {
-                Toast.makeText(this, "Nije odabran profil okusa!", Toast.LENGTH_SHORT).show()
+                dodajBiljkuBtn.error = "Nije odabran profil okusa"
                 sveIspravno = false
             }
 
             if (klimatskiTipLV.checkedItemCount == 0) {
-                Toast.makeText(this, "Nije odabran ni jedan klimatski tip!", Toast.LENGTH_SHORT)
-                    .show()
+                dodajBiljkuBtn.error = "Nije odabran ni jedan klimatski tip"
                 sveIspravno = false
             }
 
             if (zemljisniTipLV.checkedItemCount == 0) {
-                Toast.makeText(this, "Nije odabran ni jedan tip zemljista!", Toast.LENGTH_SHORT)
-                    .show()
+                dodajBiljkuBtn.error = "Nije odabran ni jedan tip zemljista"
                 sveIspravno = false
             }
 
             if (!sveIspravno) {
-                Toast.makeText(this, "Neko polje nije ispravno!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -311,7 +308,6 @@ class NovaBiljkaActivity : AppCompatActivity() {
         jelaLV.adapter = arrayAdapter
 
         jelaLV.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-
 
             dodajJeloBtnEditMode(position)
 

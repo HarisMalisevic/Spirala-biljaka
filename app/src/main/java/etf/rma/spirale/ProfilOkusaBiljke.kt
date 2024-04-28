@@ -12,7 +12,7 @@ enum class ProfilOkusaBiljke(val opis: String) {
 
     companion object{
         fun getOpisList(): List<String> {
-            return MedicinskaKorist.entries.map {
+            return entries.map {
                 it.opis
             }
         }
