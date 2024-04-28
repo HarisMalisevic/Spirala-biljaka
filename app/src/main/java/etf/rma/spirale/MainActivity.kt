@@ -48,7 +48,6 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         setupResetBtn()
         setupModSpinner()
         setupBiljkeRecyclerView()
-
     }
 
     @SuppressLint("NewApi")

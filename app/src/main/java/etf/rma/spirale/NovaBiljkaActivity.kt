@@ -18,7 +18,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import java.io.File
 
-
 class NovaBiljkaActivity : AppCompatActivity() {
 
     private lateinit var nazivET: EditText
@@ -74,10 +73,12 @@ class NovaBiljkaActivity : AppCompatActivity() {
     private fun setupMedicinskaKoristLV() {
         medicinskaKoristLV = findViewById(R.id.medicinskaKoristLV)
 
-        val medicinskeKoristiString : List<String> = MedicinskaKorist.getOpisList()
+        val medicinskeKoristiString: List<String> = MedicinskaKorist.getOpisList()
 
         val arrayAdapter: ArrayAdapter<String> = ArrayAdapter(
-            this, android.R.layout.simple_list_item_multiple_choice, medicinskeKoristiString.toTypedArray()
+            this,
+            android.R.layout.simple_list_item_multiple_choice,
+            medicinskeKoristiString.toTypedArray()
         )
 
         medicinskaKoristLV.adapter = arrayAdapter
@@ -91,7 +92,9 @@ class NovaBiljkaActivity : AppCompatActivity() {
         val klimatskiTipoviString: List<String> = KlimatskiTip.getOpisList()
 
         val arrayAdapter: ArrayAdapter<String> = ArrayAdapter(
-            this, android.R.layout.simple_list_item_multiple_choice, klimatskiTipoviString.toTypedArray()
+            this,
+            android.R.layout.simple_list_item_multiple_choice,
+            klimatskiTipoviString.toTypedArray()
         )
         klimatskiTipLV.adapter = arrayAdapter
         klimatskiTipLV.choiceMode = ListView.CHOICE_MODE_MULTIPLE
@@ -104,7 +107,9 @@ class NovaBiljkaActivity : AppCompatActivity() {
         val zemljisniTipoviString: List<String> = Zemljiste.getOpisList()
 
         val arrayAdapter: ArrayAdapter<String> = ArrayAdapter(
-            this, android.R.layout.simple_list_item_multiple_choice, zemljisniTipoviString.toTypedArray()
+            this,
+            android.R.layout.simple_list_item_multiple_choice,
+            zemljisniTipoviString.toTypedArray()
         )
 
         zemljisniTipLV.adapter = arrayAdapter
@@ -160,11 +165,11 @@ class NovaBiljkaActivity : AppCompatActivity() {
         }
     }
 
-    private fun dodajJeloBtnEditMode(position: Int){
+    private fun dodajJeloBtnEditMode(position: Int) {
 
         dodajJeloBtn.text = getString(R.string.dodajJeloBtn_izmijeniJelo)
 
-        val odabranoJelo : String = jelaNoveBiljke[position]
+        val odabranoJelo: String = jelaNoveBiljke[position]
 
         jeloET.setText(odabranoJelo)
 
@@ -177,7 +182,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
 
             val novoJelo: String = jeloET.text.toString()
 
-            if (novoJelo == jelaNoveBiljke[position]){
+            if (novoJelo == jelaNoveBiljke[position]) {
 
                 jeloET.text.clear()
                 dodajJeloBtn.text = getString(R.string.dodajJeloBtn_dodajJelo)
@@ -265,12 +270,13 @@ class NovaBiljkaActivity : AppCompatActivity() {
         uslikajBiljkuBtn.setOnClickListener {
 
             if (ContextCompat.checkSelfPermission(
-                    this,
-                    android.Manifest.permission.CAMERA
+                    this, android.Manifest.permission.CAMERA
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
                 Toast.makeText(this, "Camera permision not granted!", Toast.LENGTH_SHORT).show()
-                requestPermissions(arrayOf(android.Manifest.permission.CAMERA), 400) // TODO: Ekstraktovati
+                requestPermissions(
+                    arrayOf(android.Manifest.permission.CAMERA), 400
+                ) // TODO: Ekstraktovati
             }
 
             takePhotoContract.launch(imageURI)
@@ -302,7 +308,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
 
         jelaLV.adapter = arrayAdapter
 
-        jelaLV.onItemClickListener = AdapterView.OnItemClickListener{ _, _, position, _ ->
+        jelaLV.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
 
 
             dodajJeloBtnEditMode(position)
