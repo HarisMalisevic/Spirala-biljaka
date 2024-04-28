@@ -275,13 +275,13 @@ class NovaBiljkaActivity : AppCompatActivity() {
 
     private fun validacijaEditText(editText: EditText): Boolean {
 
-        if ((editText.text.length >= 20)) {
+        if ((editText.text.length > 20)) {
             editText.error = "Sadrzaj predug"
             return false
         }
 
 
-        if (editText.text.length <= 2) {
+        if (editText.text.length < 2) {
             editText.error = "Sadrzaj prekratak"
             return false
         }
