@@ -53,11 +53,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_nova_biljka)
 
-        //TODO: Button: uslikajBiljkuBtn
-
-        //TODO: Slikanje biljke
         //TODO: TESTIRANJE
-
 
         setupNazivET()
         setupPorodicaET()
@@ -67,6 +63,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
         setupSlikaIV()
 
         setupJelaLV()
+        //TODO: U ListView ispisati Opise umjesto ENUM naziva!!
         setupMedicinskaKoristLV()
         setupKlimatskiTipLV()
         setupZemljisniTipLV()
@@ -162,6 +159,8 @@ class NovaBiljkaActivity : AppCompatActivity() {
 
             Toast.makeText(this, "Jelo dodato", Toast.LENGTH_SHORT).show()
 
+            jeloET.text.clear()
+
         }
     }
 
@@ -211,7 +210,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
 
             Toast.makeText(this, "Uspješno spašena biljka!", Toast.LENGTH_SHORT).show()
 
-            val novaBiljka: Biljka = kreirajPovratnuBiljku()
+            val novaBiljka: Biljka = buildReturnBiljka()
             val resultIntent = Intent()
             resultIntent.putExtra("novaBiljka", novaBiljka)
             setResult(Activity.RESULT_OK, resultIntent)
@@ -293,7 +292,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
         return any { it.equals(s, ignoreCase) }
     }
 
-    private fun kreirajPovratnuBiljku(): Biljka {
+    private fun buildReturnBiljka(): Biljka {
 
         val nazivNoveBiljke = nazivET.text.toString()
         val porodicaNoveBiljke = porodicaET.text.toString()
