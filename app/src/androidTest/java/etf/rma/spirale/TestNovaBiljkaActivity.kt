@@ -1,8 +1,4 @@
 package etf.rma.spirale
-//ispravite paket tako da odgovara nazivu paketa kojeg imate u projektu
-//ovdje mozete dodati i import klasa ako su u drugom paketu
-//glavnu aktivnost imenujte tako da ima naziv MainActivity (ovo je defaultni naziv)
-//svi id-evi i podaci koji se koriste u testu su iz postavke i takvi trebaju biti i u vasem projektu
 
 import android.view.View
 import android.widget.EditText
@@ -51,8 +47,7 @@ class TestNovaBiljkaActivity {
     }
 
     @Test
-    fun testEditTextPrekratko() {
-        // Click the button
+    fun testValidacijaPoljaPrekratko() {
         onView(withId(R.id.novaBiljkaBtn)).perform(click())
 
         onView(withId(R.id.nazivET)).perform(typeText("N"), closeSoftKeyboard())
@@ -68,13 +63,18 @@ class TestNovaBiljkaActivity {
     }
 
     @Test
-    fun testEditTextPredugo() {
-        // Click the button
+    fun testValidacijaPoljaPredugo() {
         onView(withId(R.id.novaBiljkaBtn)).perform(click())
 
-        onView(withId(R.id.nazivET)).perform(typeText("Predug naziv za biljku"), closeSoftKeyboard())
-        onView(withId(R.id.porodicaET)).perform(typeText("Preduga porodica biljke"), closeSoftKeyboard())
-        onView(withId(R.id.medicinskoUpozorenjeET)).perform(typeText("Predugo upozorenje za biljku"), closeSoftKeyboard())
+        onView(withId(R.id.nazivET)).perform(
+            typeText("Predug naziv za biljku"), closeSoftKeyboard()
+        )
+        onView(withId(R.id.porodicaET)).perform(
+            typeText("Preduga porodica biljke"), closeSoftKeyboard()
+        )
+        onView(withId(R.id.medicinskoUpozorenjeET)).perform(
+            typeText("Predugo upozorenje za biljku"), closeSoftKeyboard()
+        )
 
         onView(withId(R.id.dodajBiljkuBtn)).perform(click())
 
@@ -85,7 +85,7 @@ class TestNovaBiljkaActivity {
 
     @Test
     fun testJeloETValidacija() {
-        // Click the button
+
         onView(withId(R.id.novaBiljkaBtn)).perform(click())
 
         onView(withId(R.id.jeloET)).perform(typeText("N"), closeSoftKeyboard())
@@ -94,7 +94,9 @@ class TestNovaBiljkaActivity {
         onView(withId(R.id.jeloET)).perform(clearText())
 
 
-        onView(withId(R.id.jeloET)).perform(typeText("Predug naziv jela za biljku"), closeSoftKeyboard())
+        onView(withId(R.id.jeloET)).perform(
+            typeText("Predug naziv jela za biljku"), closeSoftKeyboard()
+        )
         onView(withId(R.id.dodajJeloBtn)).perform(click())
         onView(withId(R.id.jeloET)).check(matches(hasErrorText("Sadrzaj predug")))
         onView(withId(R.id.jeloET)).perform(clearText())
@@ -107,7 +109,7 @@ class TestNovaBiljkaActivity {
 
     @Test
     fun testDuplikatiJela() {
-        // Click the button
+
         onView(withId(R.id.novaBiljkaBtn)).perform(click())
 
         onView(withId(R.id.jeloET)).perform(typeText("Grah"), closeSoftKeyboard())
@@ -126,10 +128,9 @@ class TestNovaBiljkaActivity {
         onView(withId(R.id.jeloET)).perform(clearText())
     }
 
-
     @Test
     fun testIzmijenaJela() {
-        // Click the button
+
         onView(withId(R.id.novaBiljkaBtn)).perform(click())
 
         onView(withId(R.id.jeloET)).perform(typeText("Grah"), closeSoftKeyboard())
@@ -159,9 +160,24 @@ class TestNovaBiljkaActivity {
         onView(withId(R.id.jeloET)).perform(typeText("Zeljanica"), closeSoftKeyboard())
         onView(withId(R.id.dodajJeloBtn)).perform(click())
         onView(withId(R.id.dodajJeloBtn)).check(matches(withText("Dodaj jelo")))
-        onData(anything()).inAdapterView(withId(R.id.jelaLV)).atPosition(1).check(matches(withText("Zeljanica")))
-
+        onData(anything()).inAdapterView(withId(R.id.jelaLV)).atPosition(1)
+            .check(matches(withText("Zeljanica")))
 
 
     }
+
+    @Test
+    fun testOdabirIzEnuma() {
+        onView(withId(R.id.novaBiljkaBtn)).perform(click())
+
+        onView(withId(R.id.nazivET)).perform(typeText("Naziv"), closeSoftKeyboard())
+        onView(withId(R.id.porodicaET)).perform(typeText("Porodica"), closeSoftKeyboard())
+        onView(withId(R.id.medicinskoUpozorenjeET)).perform(
+            typeText("Upozorenje!"), closeSoftKeyboard()
+        )
+
+        onView(withId(R.id.dodajBiljkuBtn)).perform(click())
+
+    }
+
 }
