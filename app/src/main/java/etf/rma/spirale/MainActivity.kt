@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
     private fun insertNovaBiljka(it: ActivityResult) {
         val novaBiljka: Biljka = it.data?.getSerializableExtra("novaBiljka", Biljka::class.java)!!
         defaultBiljke.add(novaBiljka)
+        listFiltered = false
         refreshDisplayedBiljke()
     }
 
