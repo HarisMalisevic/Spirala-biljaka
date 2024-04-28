@@ -171,6 +171,8 @@ class NovaBiljkaActivity : AppCompatActivity() {
 
         val odabranoJelo: String = jelaNoveBiljke[position]
 
+        jelaNoveBiljke[position] = ""
+
         jeloET.setText(odabranoJelo)
 
         dodajJeloBtn.setOnClickListener {
@@ -201,7 +203,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
 
             jelaLV.adapter = arrayAdapter
 
-            Toast.makeText(this, "Jelo dodato", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Jelo izmijenjeno", Toast.LENGTH_SHORT).show()
 
             jeloET.text.clear()
             dodajJeloBtn.text = getString(R.string.dodajJeloBtn_dodajJelo)
@@ -276,7 +278,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
                 Toast.makeText(this, "Camera permision not granted!", Toast.LENGTH_SHORT).show()
                 requestPermissions(
                     arrayOf(android.Manifest.permission.CAMERA), 400
-                ) // TODO: Ekstraktovati
+                )
             }
 
             takePhotoContract.launch(imageURI)
@@ -387,5 +389,4 @@ class NovaBiljkaActivity : AppCompatActivity() {
         val image = File(filesDir, "camera_photos.png")
         return FileProvider.getUriForFile(this, "etf.rma.spirale.FileProvider", image)
     }
-
 }

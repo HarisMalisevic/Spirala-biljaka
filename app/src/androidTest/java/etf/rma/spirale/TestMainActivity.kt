@@ -27,7 +27,7 @@ import org.junit.runner.RunWith
 
 
 @RunWith(AndroidJUnit4::class)
-class TestS1 {
+class TestMainActivity {
 
     @get:Rule
     var activityScenarioRule = ActivityScenarioRule(
@@ -151,7 +151,7 @@ class TestS1 {
                 )
                 assert(
                     false,
-                    { "Scroll treba pasti sljedeÄ‡a biljka se prikazuje nakon filtriranja a ne treba. Biljka:  " + naziv })
+                    { "Scroll treba pasti sljedeca biljka se prikazuje nakon filtriranja a ne treba. Biljka:  " + naziv })
             } catch (e: Exception) {
                 assertThat(e.message, containsString("Error performing"))
             }
