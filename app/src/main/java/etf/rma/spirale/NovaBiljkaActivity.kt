@@ -208,6 +208,8 @@ class NovaBiljkaActivity : AppCompatActivity() {
             jeloET.text.clear()
             dodajJeloBtn.text = getString(R.string.dodajJeloBtn_dodajJelo)
 
+            setupDodajJeloBtn()
+
         }
     }
 
