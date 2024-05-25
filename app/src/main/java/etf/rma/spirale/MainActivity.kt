@@ -169,7 +169,8 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
             val hasCommonKlimatskiTip =
                 biljkaKlimatskiTipSet.intersect(referenceKlimatskiTip).isNotEmpty()
             val hasCommonZemljiste = biljkaZemljisteSet.intersect(referenceZemljiste).isNotEmpty()
-            (hasCommonKlimatskiTip && hasCommonZemljiste)
+            val hasCommonPorodica = referenceBiljka.porodica == biljka.porodica
+            (hasCommonPorodica && hasCommonKlimatskiTip && hasCommonZemljiste)
         }
 
         return filteredBiljke
