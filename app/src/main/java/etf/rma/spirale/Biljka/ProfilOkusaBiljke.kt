@@ -1,4 +1,4 @@
-package etf.rma.spirale
+package etf.rma.spirale.Biljka
 
 enum class ProfilOkusaBiljke(val opis: String) {
     MENTA("Mentol - osvježavajući, hladan ukus"),

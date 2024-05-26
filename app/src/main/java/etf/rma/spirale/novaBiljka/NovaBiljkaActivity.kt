@@ -1,4 +1,4 @@
-package etf.rma.spirale
+package etf.rma.spirale.novaBiljka
 
 import android.app.Activity
 import android.content.Intent
@@ -16,6 +16,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import etf.rma.spirale.Biljka.Biljka
+import etf.rma.spirale.Biljka.KlimatskiTip
+import etf.rma.spirale.Biljka.MedicinskaKorist
+import etf.rma.spirale.Biljka.ProfilOkusaBiljke
+import etf.rma.spirale.Biljka.Zemljiste
+import etf.rma.spirale.R
 import java.io.File
 
 class NovaBiljkaActivity : AppCompatActivity() {

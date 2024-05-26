@@ -1,4 +1,4 @@
-package etf.rma.spirale
+package etf.rma.spirale.mainActivity
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import etf.rma.spirale.Biljka.Biljka
+import etf.rma.spirale.R
 
 
 class BiljkeRVAdapter(private var biljke: List<Biljka>, private val listener: RecyclerViewEvent) :

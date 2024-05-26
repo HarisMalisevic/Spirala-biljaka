@@ -1,5 +1,11 @@
 package etf.rma.spirale
 
+import etf.rma.spirale.Biljka.Biljka
+import etf.rma.spirale.Biljka.KlimatskiTip
+import etf.rma.spirale.Biljka.MedicinskaKorist
+import etf.rma.spirale.Biljka.ProfilOkusaBiljke
+import etf.rma.spirale.Biljka.Zemljiste
+
 val defaultBiljke = mutableListOf(
     Biljka(
         naziv = "Bosiljak (Ocimum basilicum)",

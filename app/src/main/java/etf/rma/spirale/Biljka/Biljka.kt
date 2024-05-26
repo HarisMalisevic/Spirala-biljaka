@@ -1,4 +1,4 @@
-package etf.rma.spirale
+package etf.rma.spirale.Biljka
 
 import java.io.Serializable
 data class Biljka (

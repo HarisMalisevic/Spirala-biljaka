@@ -1,18 +1,20 @@
 package etf.rma.spirale
 
-import android.graphics.Bitmap
-import android.widget.Toast
+import etf.rma.spirale.Biljka.Biljka
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
-class TrefleDAO {
+object TrefleDAO {
 
     //TODO: Retrofit HTTP
-    companion object {
-        fun getImage(biljka: Biljka) {
-            val scientificName = biljka.getLatinskiNaziv()
-        }
 
-        //TODO: Implementirati fun fixData(biljka: Biljka): Biljka {}
 
-        //TODO: Implementirati fun getPlantsWithFlowerColor(flowerColor: String, substr: String): List<Biljka> {}
+
+    suspend fun getImage(biljka: Biljka) {
+        val scientificName = biljka.getLatinskiNaziv()
     }
+
+    //TODO: Implementirati suspend fun fixData(biljka: Biljka): Biljka {}
+
+    //TODO: Implementirati suspend fun getPlantsWithFlowerColor(flowerColor: String, substr: String): List<Biljka> {}
 }
