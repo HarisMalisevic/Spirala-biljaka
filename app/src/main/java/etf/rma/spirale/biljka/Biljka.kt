@@ -10,17 +10,11 @@ data class Biljka (
     val jela: List<String>,
     val klimatskiTipovi: List<KlimatskiTip>,
     val zemljisniTipovi: List<Zemljiste>
-) : Serializable{
+) : Serializable { // TODO: Custom serijalizacija koja odgovara nazivima u JSON sa API
 
-    fun getLatinskiNaziv(): String? {
+    fun getLatinskiNaziv(): String {
         val regex = "\\(([^)]+)\\)".toRegex()
         val matchResult = regex.find(this.naziv)
-        return matchResult?.groups?.get(1)?.value
-    }
-
-    fun getSlug(): String{ // https://docs.trefle.io/reference/#tag/Plants/operation/getPlant
-        val latinskiNaziv = this.getLatinskiNaziv()
-        val slug = latinskiNaziv?.replace(" ", "-")
-        return slug.toString()
+        return matchResult!!.groups[1]!!.value
     }
 }
