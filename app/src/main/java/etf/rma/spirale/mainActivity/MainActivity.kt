@@ -14,11 +14,11 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import etf.rma.spirale.Biljka.Biljka
-import etf.rma.spirale.Biljka.KlimatskiTip
-import etf.rma.spirale.Biljka.MedicinskaKorist
-import etf.rma.spirale.Biljka.ProfilOkusaBiljke
-import etf.rma.spirale.Biljka.Zemljiste
+import etf.rma.spirale.biljka.Biljka
+import etf.rma.spirale.biljka.KlimatskiTip
+import etf.rma.spirale.biljka.MedicinskaKorist
+import etf.rma.spirale.biljka.ProfilOkusaBiljke
+import etf.rma.spirale.biljka.Zemljiste
 import etf.rma.spirale.novaBiljka.NovaBiljkaActivity
 import etf.rma.spirale.R
 import etf.rma.spirale.defaultBiljke

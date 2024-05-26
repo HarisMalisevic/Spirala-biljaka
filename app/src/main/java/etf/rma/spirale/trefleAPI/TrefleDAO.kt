@@ -1,13 +1,10 @@
-package etf.rma.spirale
+package etf.rma.spirale.trefleAPI
 
-import etf.rma.spirale.Biljka.Biljka
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import etf.rma.spirale.biljka.Biljka
 
-object TrefleDAO {
+object TrefleDAO{
 
     //TODO: Retrofit HTTP
-
 
 
     suspend fun getImage(biljka: Biljka) {

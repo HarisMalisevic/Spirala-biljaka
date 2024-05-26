@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import etf.rma.spirale.Biljka.Biljka
+import etf.rma.spirale.biljka.Biljka
 import etf.rma.spirale.R
 
 

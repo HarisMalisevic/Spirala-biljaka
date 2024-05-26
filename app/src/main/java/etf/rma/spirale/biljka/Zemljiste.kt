@@ -1,4 +1,4 @@
-package etf.rma.spirale.Biljka
+package etf.rma.spirale.biljka
 
 enum class Zemljiste(val naziv: String) {
     PJESKOVITO("Pjeskovito zemljište"),

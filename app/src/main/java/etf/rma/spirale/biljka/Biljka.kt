@@ -1,4 +1,4 @@
-package etf.rma.spirale.Biljka
+package etf.rma.spirale.biljka
 
 import java.io.Serializable
 data class Biljka (
@@ -18,4 +18,9 @@ data class Biljka (
         return matchResult?.groups?.get(1)?.value
     }
 
+    fun getSlug(): String{ // https://docs.trefle.io/reference/#tag/Plants/operation/getPlant
+        val latinskiNaziv = this.getLatinskiNaziv()
+        val slug = latinskiNaziv?.replace(" ", "-")
+        return slug.toString()
+    }
 }

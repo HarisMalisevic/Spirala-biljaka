@@ -1,4 +1,4 @@
-package etf.rma.spirale.Biljka
+package etf.rma.spirale.biljka
 
 enum class KlimatskiTip(val opis: String) {
     SREDOZEMNA("Mediteranska klima - suha, topla ljeta i blage zime"),

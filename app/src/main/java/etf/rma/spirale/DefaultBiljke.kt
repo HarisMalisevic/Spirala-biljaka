@@ -1,10 +1,10 @@
 package etf.rma.spirale
 
-import etf.rma.spirale.Biljka.Biljka
-import etf.rma.spirale.Biljka.KlimatskiTip
-import etf.rma.spirale.Biljka.MedicinskaKorist
-import etf.rma.spirale.Biljka.ProfilOkusaBiljke
-import etf.rma.spirale.Biljka.Zemljiste
+import etf.rma.spirale.biljka.Biljka
+import etf.rma.spirale.biljka.KlimatskiTip
+import etf.rma.spirale.biljka.MedicinskaKorist
+import etf.rma.spirale.biljka.ProfilOkusaBiljke
+import etf.rma.spirale.biljka.Zemljiste
 
 val defaultBiljke = mutableListOf(
     Biljka(

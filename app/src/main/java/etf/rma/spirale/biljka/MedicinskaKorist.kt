@@ -1,4 +1,4 @@
-package etf.rma.spirale.Biljka
+package etf.rma.spirale.biljka
 
 enum class MedicinskaKorist(val opis: String) {
     SMIRENJE("Smirenje - za smirenje i relaksaciju"),
