@@ -22,9 +22,6 @@ import etf.rma.spirale.biljka.Zemljiste
 import etf.rma.spirale.novaBiljka.NovaBiljkaActivity
 import etf.rma.spirale.R
 import etf.rma.spirale.defaultBiljke
-import etf.rma.spirale.trefleAPI.TrefleDAO
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
 
