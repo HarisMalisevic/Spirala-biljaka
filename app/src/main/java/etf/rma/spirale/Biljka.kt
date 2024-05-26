@@ -12,4 +12,10 @@ data class Biljka (
     val zemljisniTipovi: List<Zemljiste>
 ) : Serializable{
 
+    fun getLatinskiNaziv(): String? {
+        val regex = "\\(([^)]+)\\)".toRegex()
+        val matchResult = regex.find(this.naziv)
+        return matchResult?.groups?.get(1)?.value
+    }
+
 }
