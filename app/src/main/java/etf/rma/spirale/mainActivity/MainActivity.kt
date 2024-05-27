@@ -22,6 +22,11 @@ import etf.rma.spirale.biljka.Zemljiste
 import etf.rma.spirale.novaBiljka.NovaBiljkaActivity
 import etf.rma.spirale.R
 import etf.rma.spirale.defaultBiljke
+import etf.rma.spirale.trefleAPI.TrefleDAO
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
 
@@ -57,12 +62,19 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         setupModSpinner()
         setupBiljkeRecyclerView()
 
-
-        val latinName = defaultBiljke[0].getLatinskiNaziv()
+        trefleTest()
 
     }
 
+    private fun trefleTest() {
+        val latinName = defaultBiljke[0].getLatinskiNaziv()
 
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
+
+        scope.launch {
+            TrefleDAO.getBiljkaPoLatinskomNazivu(latinName)
+        }
+    }
 
 
     @SuppressLint("NewApi")
