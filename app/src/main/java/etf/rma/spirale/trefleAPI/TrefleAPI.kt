@@ -9,7 +9,7 @@ interface TrefleAPI {
     suspend fun getBiljkaPoLatinskomNazivu(
         @Query("token") apiToken : String,
         @Query("slug") formatiranLatinskiNaziv: String
-    ) : Biljka
+    ): TrefleBiljka
 
 
     //TODO: Anotirati suspend fun getImage(biljka: Biljka): Bitmap {}

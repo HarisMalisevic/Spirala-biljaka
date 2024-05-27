@@ -58,7 +58,11 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         setupBiljkeRecyclerView()
 
 
+        val latinName = defaultBiljke[0].getLatinskiNaziv()
+
     }
+
+
 
 
     @SuppressLint("NewApi")
