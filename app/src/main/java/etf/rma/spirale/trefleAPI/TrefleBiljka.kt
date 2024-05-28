@@ -3,6 +3,7 @@ package etf.rma.spirale.trefleAPI
 
 import com.google.gson.annotations.SerializedName
 
+// TODO: Klasu prilagoditi za rad sa species pretragom!
 data class TrefleBiljka(
     @SerializedName("data") val `data`: Data
 ) {

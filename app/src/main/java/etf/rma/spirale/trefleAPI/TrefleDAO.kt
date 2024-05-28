@@ -7,16 +7,21 @@ import kotlinx.coroutines.withContext
 
 object TrefleDAO {
 
-    suspend fun getBiljkaPoLatinskomNazivu(latinskiNaziv: String): TrefleBiljka? {
+    suspend fun getBiljkaPoLatinskomNazivu(latinskiNaziv: String) {
+        //TODO: treba vratiti Biljka, void je privremeno
 
         return withContext(Dispatchers.IO) {
+
+            // TODO: Handle za Success i Fail
             val formatiranLatinskiNaziv = getFormatiranLatinskiNaziv(latinskiNaziv)
             val trefleResponse = RetrofitClient.trefleAPI.getBiljkaPoLatinskomNazivu(
                 formatiranLatinskiNaziv, Constraints.API_TOKEN
             )
 
             Log.d("TrefleDAO", trefleResponse.code().toString())
-            return@withContext trefleResponse.body()
+            Log.d(
+                "TrefleDAO Image URL", trefleResponse.body()?.data?.mainSpecies?.imageUrl.toString()
+            )
         }
     }
 

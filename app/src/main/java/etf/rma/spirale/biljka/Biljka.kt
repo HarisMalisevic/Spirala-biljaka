@@ -63,7 +63,7 @@ data class Biljka(
             if (medicinskeKoristi.isEmpty()) throw IllegalArgumentException("Mora biti bar jedna medicinska korist")
             if (jela.isEmpty()) throw IllegalArgumentException("Mora biti bar jedno jelo")
 
-            val naziv = "$narodniNaziv($latinskiNaziv)"
+            val naziv = "$narodniNaziv ($latinskiNaziv)"
 
             return Biljka(
                 naziv,

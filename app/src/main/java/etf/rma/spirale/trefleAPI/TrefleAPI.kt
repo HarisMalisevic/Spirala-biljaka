@@ -8,7 +8,10 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TrefleAPI {
-    @GET("api/v1/plants/{slug}")
+
+    //TODO: Prvo pozvati query po scientific_name i odrediti ID
+    //      onda odraditi pretragu po ID za species
+    @GET("api/v1/species/{slug}")
     suspend fun getBiljkaPoLatinskomNazivu(
         @Path("slug") formatiranLatinskiNaziv: String,
         @Query("token") apiToken : String
