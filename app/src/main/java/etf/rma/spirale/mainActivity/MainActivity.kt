@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
     }
 
     @SuppressLint("NewApi", "NotifyDataSetChanged")
-    private fun insertNovaBiljka(it: ActivityResult) {¨¨
+    private fun insertNovaBiljka(it: ActivityResult) {
         val novaBiljka: Biljka = it.data?.getSerializableExtra("novaBiljka", Biljka::class.java)!!
         defaultBiljke.add(novaBiljka)
         listFiltered = false
