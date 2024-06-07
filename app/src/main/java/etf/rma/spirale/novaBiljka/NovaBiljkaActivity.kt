@@ -71,6 +71,8 @@ class NovaBiljkaActivity : AppCompatActivity() {
         setupZemljisniTipLV()
         setupProfilOkusaLV()
 
+        //TODO: Validirati da postoji latinski naziv u zagradama
+
         setupDodajJeloBtn()
         setupDodajBiljkuBtn()
         setupUslikajBiljkuBtn()
@@ -334,7 +336,12 @@ class NovaBiljkaActivity : AppCompatActivity() {
 
     private fun validacijaEditText(editText: EditText): Boolean {
 
-        if ((editText.text.length > 20)) {
+        if (editText == nazivET) {
+            if ((editText.text.length > 40)) {
+                editText.error = "Sadrzaj predug"
+                return false
+            }
+        } else if ((editText.text.length > 20)) {
             editText.error = "Sadrzaj predug"
             return false
         }
@@ -358,9 +365,11 @@ class NovaBiljkaActivity : AppCompatActivity() {
         val porodicaNoveBiljke = porodicaET.text.toString()
         val upozorenjeNoveBiljke = medicinskoUpozorenjeET.text.toString()
 
-        val medKoristiNoveBiljke = getSelectedItems(medicinskaKoristLV, MedicinskaKorist.entries)
-        val klimeNoveBiljke = getSelectedItems(klimatskiTipLV, KlimatskiTip.entries)
-        val zemljistaNoveBiljke = getSelectedItems(zemljisniTipLV, Zemljiste.entries)
+        val medKoristiNoveBiljke =
+            getSelectedItems(medicinskaKoristLV, MedicinskaKorist.entries).toMutableList()
+        val klimeNoveBiljke = getSelectedItems(klimatskiTipLV, KlimatskiTip.entries).toMutableList()
+        val zemljistaNoveBiljke =
+            getSelectedItems(zemljisniTipLV, Zemljiste.entries).toMutableList()
 
         return Biljka(
             nazivNoveBiljke,

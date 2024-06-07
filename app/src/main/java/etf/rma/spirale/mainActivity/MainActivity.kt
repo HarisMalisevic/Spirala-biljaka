@@ -84,11 +84,17 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
 
     @SuppressLint("NewApi", "NotifyDataSetChanged")
     private fun insertNovaBiljka(it: ActivityResult) {
-        val novaBiljka: Biljka = it.data?.getSerializableExtra("novaBiljka", Biljka::class.java)!!
+        var novaBiljka: Biljka = it.data?.getSerializableExtra("novaBiljka", Biljka::class.java)!!
+
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
+
+        scope.launch {
+            novaBiljka = TrefleDAO.fixData(novaBiljka)
+        }
+
         defaultBiljke.add(novaBiljka)
         listFiltered = false
 
-        val scope = CoroutineScope(Job() + Dispatchers.Main)
         scope.launch {
             val image = TrefleDAO.getImage(novaBiljka)
             slikeBiljaka[novaBiljka.naziv] = image
