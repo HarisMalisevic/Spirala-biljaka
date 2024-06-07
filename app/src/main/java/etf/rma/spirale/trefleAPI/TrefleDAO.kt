@@ -16,7 +16,7 @@ import java.io.IOException
 import java.net.URL
 
 
-object TrefleDAO {
+class TrefleDAO {
 
     private val defaultBitmap = BitmapFactory.decodeResource(
         App.context.resources, R.drawable.plant
@@ -103,93 +103,119 @@ object TrefleDAO {
         val latinskiNaziv = biljka.getLatinskiNaziv()
         val trefleSpeciesResponse = getBiljkaPoLatinskomNazivu(latinskiNaziv) ?: return biljka
 
-        fixPorodica(biljka, trefleSpeciesResponse)
-        fixEdible(biljka, trefleSpeciesResponse)
-        fixMedicinskoUpozorenje(biljka, trefleSpeciesResponse)
-        fixZemljiste(biljka, trefleSpeciesResponse)
+        val biljkaBuilder = Biljka.Builder()
 
+        biljkaBuilder.setNaziv(biljka.naziv)
+        biljkaBuilder.setMedicinskoUpozorenje(biljka.medicinskoUpozorenje)
 
+        for (mk in biljka.medicinskeKoristi) {
+            biljkaBuilder.addMedicinskaKorist(mk)
+        }
 
+        for (jelo in biljka.jela) {
+            biljkaBuilder.addJelo(jelo)
+        }
 
+        biljkaBuilder.setProfilOkusa(biljka.profilOkusa)
 
+        fixPorodica(biljka, biljkaBuilder, trefleSpeciesResponse)
+        fixEdible(biljka, biljkaBuilder, trefleSpeciesResponse)
+        fixMedicinskoUpozorenje(biljka, biljkaBuilder, trefleSpeciesResponse)
+        fixZemljiste(biljka, biljkaBuilder, trefleSpeciesResponse)
+        fixKlima(biljka, biljkaBuilder, trefleSpeciesResponse)
 
-        return biljka
+        return biljkaBuilder.build()
     }
 
-    private fun fixPorodica(biljka: Biljka, trefleSpeciesResponse: TrefleSpecies) {
+    private fun fixPorodica(
+        biljka: Biljka,
+        builder: Biljka.Builder, trefleSpeciesResponse: TrefleSpecies
+    ) {
         val treflePorodica = trefleSpeciesResponse.data.family ?: return
-        if (treflePorodica != "") biljka.porodica = treflePorodica
+        if (treflePorodica != "")
+            builder.setPorodica(treflePorodica)
     }
 
-    private fun fixEdible(biljka: Biljka, trefleSpeciesResponse: TrefleSpecies) {
+    private fun fixEdible(
+        biljka: Biljka,
+        builder: Biljka.Builder, trefleSpeciesResponse: TrefleSpecies
+    ) {
         val trefleEdible = trefleSpeciesResponse.data.edible ?: return
 
         if (!trefleEdible) {
 
-            if (!biljka.medicinskoUpozorenje.contains("NIJE JESTIVO")) biljka.medicinskoUpozorenje.plus(
-                " NIJE JESTIVO"
-            )
+            if (!biljka.medicinskoUpozorenje.contains("NIJE JESTIVO"))
 
-            biljka.jela.clear()
+                builder.addMedicinskoUpozorenje(" NIJE JESTIVO")
+
+            // Ne dodaju se jela, Biljka Builder po defaultu ostavi prazno
         }
     }
 
-    private fun fixMedicinskoUpozorenje(biljka: Biljka, trefleSpeciesResponse: TrefleSpecies) {
+    private fun fixMedicinskoUpozorenje(
+        biljka: Biljka,
+        builder: Biljka.Builder,
+        trefleSpeciesResponse: TrefleSpecies
+    ) {
         val trefleToxicity: String =
             (trefleSpeciesResponse.data.specifications.toxicity ?: return).toString()
 
         if (trefleToxicity == "none") return
 
-        if (!biljka.medicinskoUpozorenje.contains("TOKSIČNO") || biljka.medicinskoUpozorenje.contains(
+        if (!biljka.medicinskoUpozorenje.contains("TOKSIČNO") || !biljka.medicinskoUpozorenje.contains(
                 "TOKSICNO"
             )
         ) {
-            biljka.medicinskoUpozorenje.plus(" TOKSIČNO")
+            builder.addMedicinskoUpozorenje(" TOKSIČNO")
         }
     }
 
-    private fun fixZemljiste(biljka: Biljka, trefleSpeciesResponse: TrefleSpecies) {
+    private fun fixZemljiste(
+        biljka: Biljka,
+        builder: Biljka.Builder,
+        trefleSpeciesResponse: TrefleSpecies
+    ) {
         val trefleSoilTexture = trefleSpeciesResponse.data.growth.soilTexture ?: return
 
-        biljka.zemljisniTipovi.clear()
 
         when (trefleSoilTexture) {
-            9 -> biljka.zemljisniTipovi.add(Zemljiste.SLJUNOVITO)
-            10 -> biljka.zemljisniTipovi.add(Zemljiste.KRECNJACKO)
-            in 1..2 -> biljka.zemljisniTipovi.add(Zemljiste.GLINENO)
-            in 3..4 -> biljka.zemljisniTipovi.add(Zemljiste.PJESKOVITO)
-            in 5..6 -> biljka.zemljisniTipovi.add(Zemljiste.ILOVACA)
-            in 7..8 -> biljka.zemljisniTipovi.add(Zemljiste.CRNICA)
+            9 -> builder.addZemljisniTip(Zemljiste.SLJUNOVITO)
+            10 -> builder.addZemljisniTip(Zemljiste.KRECNJACKO)
+            in 1..2 -> builder.addZemljisniTip(Zemljiste.GLINENO)
+            in 3..4 -> builder.addZemljisniTip(Zemljiste.PJESKOVITO)
+            in 5..6 -> builder.addZemljisniTip(Zemljiste.ILOVACA)
+            in 7..8 -> builder.addZemljisniTip(Zemljiste.CRNICA)
         }
 
 
     }
 
-    private fun fixKlima(biljka: Biljka, trefleSpeciesResponse: TrefleSpecies) {
+    private fun fixKlima(
+        biljka: Biljka,
+        builder: Biljka.Builder,
+        trefleSpeciesResponse: TrefleSpecies
+    ) {
         val trefleLight = trefleSpeciesResponse.data.growth.light ?: return
         val trefleAtmosphericHumidity =
             trefleSpeciesResponse.data.growth.atmosphericHumidity ?: return
 
-        biljka.klimatskiTipovi.clear()
+        if (trefleLight in 6..9 || trefleAtmosphericHumidity in 1..5)
+            builder.addKlimatskiTip(KlimatskiTip.SREDOZEMNA)
 
+        if (trefleLight in 8..10 || trefleAtmosphericHumidity in 7..10)
+            builder.addKlimatskiTip(KlimatskiTip.TROPSKA)
 
-        if (trefleLight in 6..9 && trefleAtmosphericHumidity in 1..5)
-            biljka.klimatskiTipovi.add(KlimatskiTip.SREDOZEMNA)
+        if (trefleLight in 6..9 || trefleAtmosphericHumidity in 5..8)
+            builder.addKlimatskiTip(KlimatskiTip.SUBTROPSKA)
 
-        if (trefleLight in 8..10 && trefleAtmosphericHumidity in 7..10)
-            biljka.klimatskiTipovi.add(KlimatskiTip.TROPSKA)
+        if (trefleLight in 4..7 || trefleAtmosphericHumidity in 3..7)
+            builder.addKlimatskiTip(KlimatskiTip.UMJERENA)
 
-        if (trefleLight in 6..9 && trefleAtmosphericHumidity in 5..8)
-            biljka.klimatskiTipovi.add(KlimatskiTip.SUBTROPSKA)
+        if (trefleLight in 7..9 || trefleAtmosphericHumidity in 1..2)
+            builder.addKlimatskiTip(KlimatskiTip.SUHA)
 
-        if (trefleLight in 4..7 && trefleAtmosphericHumidity in 3..7)
-            biljka.klimatskiTipovi.add(KlimatskiTip.UMJERENA)
-
-        if (trefleLight in 7..9 && trefleAtmosphericHumidity in 1..2)
-            biljka.klimatskiTipovi.add(KlimatskiTip.SUHA)
-
-        if (trefleLight in 0..5 && trefleAtmosphericHumidity in 3..7)
-            biljka.klimatskiTipovi.add(KlimatskiTip.PLANINSKA)
+        if (trefleLight in 0..5 || trefleAtmosphericHumidity in 3..7)
+            builder.addKlimatskiTip(KlimatskiTip.PLANINSKA)
 
 
     }

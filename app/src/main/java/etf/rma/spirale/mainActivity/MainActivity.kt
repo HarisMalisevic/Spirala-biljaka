@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         val scope = CoroutineScope(Job() + Dispatchers.Main)
         scope.launch {
             for (biljka in defaultBiljke) {
-                val image = TrefleDAO.getImage(biljka)
+                val image = TrefleDAO().getImage(biljka)
                 slikeBiljaka[biljka.naziv] = image
                 biljkeRVAdapter.notifyDataSetChanged()
             }
@@ -89,14 +89,14 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         val scope = CoroutineScope(Job() + Dispatchers.Main)
 
         scope.launch {
-            novaBiljka = TrefleDAO.fixData(novaBiljka)
+            novaBiljka = TrefleDAO().fixData(novaBiljka)
         }
 
         defaultBiljke.add(novaBiljka)
         listFiltered = false
 
         scope.launch {
-            val image = TrefleDAO.getImage(novaBiljka)
+            val image = TrefleDAO().getImage(novaBiljka)
             slikeBiljaka[novaBiljka.naziv] = image
             biljkeRVAdapter.notifyDataSetChanged()
         }
