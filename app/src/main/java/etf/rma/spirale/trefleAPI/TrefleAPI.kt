@@ -3,6 +3,7 @@ package etf.rma.spirale.trefleAPI
 import etf.rma.spirale.values.Constraints
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TrefleAPI {
@@ -16,10 +17,11 @@ interface TrefleAPI {
     ): Response<TrefleSearchResponse>
 
 
-    //TODO: Anotirati suspend fun getImage(biljka: Biljka): Bitmap {}
+    @GET("api/v1/species/{id}")
+    suspend fun getSpeciesByID(
+        @Path("id") plantID: Int,
+        @Query("token") apiToken: String = Constraints.API_TOKEN
+    ): Response<TrefleSpecies>
 
-    //TODO: Anotirati suspend fun fixData(biljka: Biljka): Biljka {}
-
-    //TODO: Anotirati suspend fun getPlantsWithFlowerColor(flowerColor: String, substr: String): List<Biljka> {}
 
 }

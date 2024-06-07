@@ -3,14 +3,14 @@ package etf.rma.spirale.biljka
 import java.io.Serializable
 
 data class Biljka(
-    val naziv: String,
-    val porodica: String,
-    val medicinskoUpozorenje: String,
-    val medicinskeKoristi: List<MedicinskaKorist>,
-    val profilOkusa: ProfilOkusaBiljke,
-    val jela: List<String>,
-    val klimatskiTipovi: List<KlimatskiTip>,
-    val zemljisniTipovi: List<Zemljiste>
+    var naziv: String,
+    var porodica: String,
+    var medicinskoUpozorenje: String,
+    var medicinskeKoristi: MutableList<MedicinskaKorist>,
+    var profilOkusa: ProfilOkusaBiljke,
+    var jela: MutableList<String>,
+    var klimatskiTipovi: MutableList<KlimatskiTip>,
+    var zemljisniTipovi: MutableList<Zemljiste>
 ) : Serializable {
 
     fun getLatinskiNaziv(): String {

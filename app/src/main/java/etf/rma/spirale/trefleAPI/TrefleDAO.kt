@@ -16,16 +16,15 @@ import java.net.URL
 object TrefleDAO {
 
     private val defaultBitmap = BitmapFactory.decodeResource(
-        App.context.resources,
-        R.drawable.plant
+        App.context.resources, R.drawable.plant
     )
 
     // Private:
-    private suspend fun getBiljkaPoLatinskomNazivu(latinskiNaziv: String): TrefleSearchResponse? {
+    private suspend fun getBiljkaPoLatinskomNazivu(latinskiNaziv: String): TrefleSpecies? {
 
         return withContext(Dispatchers.IO) {
 
-            val trefleResponse = try {
+            val trefleSearchResponse = try {
                 RetrofitClient.trefleAPI.filterByScientificName(latinskiNaziv)
 
             } catch (e: IOException) {
@@ -37,33 +36,47 @@ object TrefleDAO {
                 return@withContext null
             }
 
-            if (!trefleResponse.isSuccessful || trefleResponse.body() == null) {
+            if (!trefleSearchResponse.isSuccessful || trefleSearchResponse.body() == null) {
                 Log.e("Error", "API Response not successful!")
                 return@withContext null
             }
 
-            val trefleSearchResponse = trefleResponse.body()
+            val firstSpeciesID = trefleSearchResponse.body()!!.data[0].id
 
-            Log.d("TrefleDAO", trefleResponse.code().toString())
-            Log.d("TrefleDAO Image URL", trefleSearchResponse?.data?.get(0)?.imageUrl.toString())
+            val trefleSpeciesResponse = try {
+                RetrofitClient.trefleAPI.getSpeciesByID(firstSpeciesID)
+            } catch (e: IOException) {
+                Log.e("Exception!", "IOException - internet connection issue!")
+                return@withContext null
 
-            return@withContext trefleSearchResponse
+            } catch (e: HttpException) {
+                Log.e("Exception!", "HttpException")
+                return@withContext null
+            }
+
+            if (!trefleSpeciesResponse.isSuccessful || trefleSpeciesResponse.body() == null) {
+                Log.e("Error", "API Response not successful!")
+                return@withContext null
+            }
+
+            return@withContext trefleSpeciesResponse.body()
 
         }
     }
 
     suspend fun getImage(biljka: Biljka): Bitmap {
 
-        return withContext(Dispatchers.IO) {
-            val latinskiNaziv = biljka.getLatinskiNaziv()
-            val trefleSearchResponse = getBiljkaPoLatinskomNazivu(latinskiNaziv)
+        val latinskiNaziv = biljka.getLatinskiNaziv()
+        val trefleSpeciesResponse = getBiljkaPoLatinskomNazivu(latinskiNaziv)
 
-            if (trefleSearchResponse == null) {
+        return withContext(Dispatchers.IO) {
+
+            if (trefleSpeciesResponse == null) {
                 Log.d("getImage", "NULL!")
                 return@withContext defaultBitmap
             }
 
-            val url = URL(trefleSearchResponse.data[0].imageUrl)
+            val url = URL(trefleSpeciesResponse.data.imageUrl)
 
             Log.d("getImage", url.toString())
 
@@ -78,7 +91,57 @@ object TrefleDAO {
 
     }
 
-    //TODO: Implementirati suspend fun fixData(biljka: Biljka): Biljka {}
+    suspend fun fixData(biljka: Biljka): Biljka {
+        val latinskiNaziv = biljka.getLatinskiNaziv()
+        val trefleSpeciesResponse = getBiljkaPoLatinskomNazivu(latinskiNaziv) ?: return biljka
+
+        fixPorodica(biljka, trefleSpeciesResponse)
+
+        fixEdible(biljka, trefleSpeciesResponse)
+
+        fixMedicinskoUpozorenje(biljka, trefleSpeciesResponse)
+
+
+
+
+
+
+
+        return biljka
+    }
+
+    private fun fixPorodica(biljka: Biljka, trefleSpeciesResponse: TrefleSpecies) {
+        val treflePorodica = trefleSpeciesResponse.data.family
+        if (treflePorodica != "") biljka.porodica = treflePorodica
+    }
+
+    private fun fixEdible(biljka: Biljka, trefleSpeciesResponse: TrefleSpecies) {
+        val trefleEdible = trefleSpeciesResponse.data.edible
+
+        if (!trefleEdible) {
+
+            if (!biljka.medicinskoUpozorenje.contains("NIJE JESTIVO"))
+                biljka.medicinskoUpozorenje.plus(" NIJE JESTIVO")
+
+            biljka.jela.clear()
+        }
+    }
+
+    private fun fixMedicinskoUpozorenje(biljka: Biljka, trefleSpeciesResponse: TrefleSpecies) {
+        val trefleToxicity = trefleSpeciesResponse.data.specifications.toxicity
+
+        if (trefleToxicity != null) {
+
+            if (!biljka.medicinskoUpozorenje.contains("TOKSIČNO")
+                || biljka.medicinskoUpozorenje.contains("TOKSICNO")
+            ) {
+                biljka.medicinskoUpozorenje.plus(" TOKSIČNO")
+            }
+        }
+    }
+
+
+
 
     //TODO: Implementirati suspend fun getPlantsWithFlowerColor(flowerColor: String, substr: String): List<Biljka> {}
 }
