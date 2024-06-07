@@ -1,36 +1,72 @@
 package etf.rma.spirale.trefleAPI
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
-import etf.rma.spirale.values.Constraints
+import etf.rma.spirale.App
+import etf.rma.spirale.R
+import etf.rma.spirale.biljka.Biljka
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
+import java.net.URL
+
 
 object TrefleDAO {
 
-    suspend fun getBiljkaPoLatinskomNazivu(latinskiNaziv: String) {
-        //TODO: treba vratiti Biljka, void je privremeno
+    // Private:
+    suspend fun getBiljkaPoLatinskomNazivu(latinskiNaziv: String): TrefleSearchResponse? {
 
         return withContext(Dispatchers.IO) {
+            val trefleResponse = try {
+                RetrofitClient.trefleAPI.filterByScientificName(latinskiNaziv)
+            } catch (e: java.io.IOException) {
+                Log.e("Exception!", "IOException - internet connection issue!")
+                return@withContext null
+            } catch (e: HttpException) {
+                Log.e("Exception!", "HttpException")
+                return@withContext null
+            }
 
-            // TODO: Handle za Success i Fail
-            val formatiranLatinskiNaziv = getFormatiranLatinskiNaziv(latinskiNaziv)
-            val trefleResponse = RetrofitClient.trefleAPI.getBiljkaPoLatinskomNazivu(
-                formatiranLatinskiNaziv, Constraints.API_TOKEN
-            )
+            if (!trefleResponse.isSuccessful || trefleResponse.body() == null) {
+                Log.e("Error", "API Response not successful!")
+                return@withContext null
+            }
+
+            val trefleSearchResponse = trefleResponse.body()
 
             Log.d("TrefleDAO", trefleResponse.code().toString())
-            Log.d(
-                "TrefleDAO Image URL", trefleResponse.body()?.data?.mainSpecies?.imageUrl.toString()
-            )
+            Log.d("TrefleDAO Image URL", trefleSearchResponse?.data?.get(0)?.imageUrl.toString())
+
+            return@withContext trefleSearchResponse
+
         }
     }
 
-    private fun getFormatiranLatinskiNaziv(latinskiNaziv: String): String {
-        // slug : https://docs.trefle.io/reference/#tag/Plants/operation/getPlant
-        return latinskiNaziv.replace(" ", "-").lowercase()
-    }
+    suspend fun getImage(biljka: Biljka): Bitmap {
 
-    //TODO: Implementirati suspend fun getImage(biljka: Biljka): Bitmap {}
+        val latinskiNaziv = biljka.getLatinskiNaziv()
+        val trefleSearchResponse = getBiljkaPoLatinskomNazivu(latinskiNaziv)
+
+        if (trefleSearchResponse == null) {
+            Log.d("getImage", "NULL!")
+        }
+
+        val url = URL(trefleSearchResponse?.data?.get(0)?.imageUrl.toString())
+
+        Log.d("getImage", url.toString())
+
+        return try {
+            BitmapFactory.decodeStream(url.openConnection().getInputStream())
+        } catch (e: java.io.IOException) {
+            println(e)
+            BitmapFactory.decodeResource(App.context.resources, R.drawable.plant)
+        }
+
+
+    }
 
     //TODO: Implementirati suspend fun fixData(biljka: Biljka): Biljka {}
 
