@@ -1,6 +1,5 @@
 package etf.rma.spirale.trefleAPI
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
@@ -8,7 +7,6 @@ import etf.rma.spirale.App
 import etf.rma.spirale.R
 import etf.rma.spirale.biljka.Biljka
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
@@ -16,6 +14,11 @@ import java.net.URL
 
 
 object TrefleDAO {
+
+    private val defaultBitmap = BitmapFactory.decodeResource(
+        App.context.resources,
+        R.drawable.plant
+    )
 
     // Private:
     private suspend fun getBiljkaPoLatinskomNazivu(latinskiNaziv: String): TrefleSearchResponse? {
@@ -57,13 +60,10 @@ object TrefleDAO {
 
             if (trefleSearchResponse == null) {
                 Log.d("getImage", "NULL!")
-                return@withContext BitmapFactory.decodeResource(
-                    App.context.resources,
-                    R.drawable.plant
-                )
+                return@withContext defaultBitmap
             }
 
-            val url = URL(trefleSearchResponse?.data?.get(0)?.imageUrl.toString())
+            val url = URL(trefleSearchResponse.data[0].imageUrl)
 
             Log.d("getImage", url.toString())
 
@@ -71,7 +71,7 @@ object TrefleDAO {
                 BitmapFactory.decodeStream(url.openConnection().getInputStream())
             } catch (e: IOException) {
                 println(e)
-                BitmapFactory.decodeResource(App.context.resources, R.drawable.plant)
+                defaultBitmap
             }
         }
 
