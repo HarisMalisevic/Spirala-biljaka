@@ -57,6 +57,10 @@ object TrefleDAO {
 
             if (trefleSearchResponse == null) {
                 Log.d("getImage", "NULL!")
+                return@withContext BitmapFactory.decodeResource(
+                    App.context.resources,
+                    R.drawable.plant
+                )
             }
 
             val url = URL(trefleSearchResponse?.data?.get(0)?.imageUrl.toString())
