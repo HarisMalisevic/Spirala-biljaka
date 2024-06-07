@@ -11,20 +11,24 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import java.io.IOException
 import java.net.URL
 
 
 object TrefleDAO {
 
     // Private:
-    suspend fun getBiljkaPoLatinskomNazivu(latinskiNaziv: String): TrefleSearchResponse? {
+    private suspend fun getBiljkaPoLatinskomNazivu(latinskiNaziv: String): TrefleSearchResponse? {
 
         return withContext(Dispatchers.IO) {
+
             val trefleResponse = try {
                 RetrofitClient.trefleAPI.filterByScientificName(latinskiNaziv)
-            } catch (e: java.io.IOException) {
+
+            } catch (e: IOException) {
                 Log.e("Exception!", "IOException - internet connection issue!")
                 return@withContext null
+
             } catch (e: HttpException) {
                 Log.e("Exception!", "HttpException")
                 return@withContext null
@@ -47,22 +51,24 @@ object TrefleDAO {
 
     suspend fun getImage(biljka: Biljka): Bitmap {
 
-        val latinskiNaziv = biljka.getLatinskiNaziv()
-        val trefleSearchResponse = getBiljkaPoLatinskomNazivu(latinskiNaziv)
+        return withContext(Dispatchers.IO) {
+            val latinskiNaziv = biljka.getLatinskiNaziv()
+            val trefleSearchResponse = getBiljkaPoLatinskomNazivu(latinskiNaziv)
 
-        if (trefleSearchResponse == null) {
-            Log.d("getImage", "NULL!")
-        }
+            if (trefleSearchResponse == null) {
+                Log.d("getImage", "NULL!")
+            }
 
-        val url = URL(trefleSearchResponse?.data?.get(0)?.imageUrl.toString())
+            val url = URL(trefleSearchResponse?.data?.get(0)?.imageUrl.toString())
 
-        Log.d("getImage", url.toString())
+            Log.d("getImage", url.toString())
 
-        return try {
-            BitmapFactory.decodeStream(url.openConnection().getInputStream())
-        } catch (e: java.io.IOException) {
-            println(e)
-            BitmapFactory.decodeResource(App.context.resources, R.drawable.plant)
+            return@withContext try {
+                BitmapFactory.decodeStream(url.openConnection().getInputStream())
+            } catch (e: IOException) {
+                println(e)
+                BitmapFactory.decodeResource(App.context.resources, R.drawable.plant)
+            }
         }
 
 

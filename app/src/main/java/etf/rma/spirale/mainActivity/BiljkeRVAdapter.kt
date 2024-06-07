@@ -1,17 +1,23 @@
 package etf.rma.spirale.mainActivity
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import etf.rma.spirale.biljka.Biljka
 import etf.rma.spirale.R
 
 
-class BiljkeRVAdapter(private var biljke: List<Biljka>, private val listener: RecyclerViewEvent) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class BiljkeRVAdapter(
+    private var biljke: List<Biljka>,
+    private var slikeBiljaka: MutableMap<String, Bitmap>,
+    private val listener: RecyclerViewEvent
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var medicinskiView: Int = R.layout.medicinski_item
     private var kuharskiView: Int = R.layout.kuharski_item
@@ -19,11 +25,9 @@ class BiljkeRVAdapter(private var biljke: List<Biljka>, private val listener: Re
 
     private var currentView = medicinskiView
 
-
     fun setCurrentView(value: Int) {
         this.currentView = value
     }
-
 
     override fun getItemViewType(position: Int): Int {
         return currentView
@@ -66,6 +70,7 @@ class BiljkeRVAdapter(private var biljke: List<Biljka>, private val listener: Re
             medicinskiView -> {
                 val medicinskiVH: MedicinskiViewHolder = holder as MedicinskiViewHolder
                 medicinskiVH.naziv.text = item.naziv
+                medicinskiVH.slika.setImageBitmap(slikeBiljaka[item.naziv])
                 medicinskiVH.upozorenje.text = item.medicinskoUpozorenje
                 if (item.medicinskeKoristi.size > 0) medicinskiVH.korist1.text =
                     item.medicinskeKoristi[0].opis
@@ -82,6 +87,7 @@ class BiljkeRVAdapter(private var biljke: List<Biljka>, private val listener: Re
             kuharskiView -> {
                 val kuharskiVH: KuharskiViewHolder = holder as KuharskiViewHolder
                 kuharskiVH.naziv.text = item.naziv
+                kuharskiVH.slika.setImageBitmap(slikeBiljaka[item.naziv])
                 kuharskiVH.profilOkusa.text = item.profilOkusa.opis
                 if (item.jela.size > 0) kuharskiVH.jelo1.text = item.jela[0]
                 else kuharskiVH.jelo1.text = ""
@@ -95,6 +101,7 @@ class BiljkeRVAdapter(private var biljke: List<Biljka>, private val listener: Re
             botanickiView -> {
                 val botanickiVH: BotanickiViewHolder = holder as BotanickiViewHolder
                 botanickiVH.naziv.text = item.naziv
+                botanickiVH.slika.setImageBitmap(slikeBiljaka[item.naziv])
                 botanickiVH.porodica.text = item.porodica
                 botanickiVH.klimatskiTip.text = item.klimatskiTipovi[0].opis
                 botanickiVH.zemljisniTip.text = item.zemljisniTipovi[0].naziv
@@ -118,6 +125,7 @@ class BiljkeRVAdapter(private var biljke: List<Biljka>, private val listener: Re
     inner class MedicinskiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
         val naziv: TextView = itemView.findViewById(R.id.nazivItem)
+        val slika: ImageView = itemView.findViewById(R.id.slikaItem)
         var upozorenje: TextView = itemView.findViewById(R.id.upozorenjeItem)
         var korist1: TextView = itemView.findViewById(R.id.korist1Item)
         var korist2: TextView = itemView.findViewById(R.id.korist2Item)
@@ -138,6 +146,7 @@ class BiljkeRVAdapter(private var biljke: List<Biljka>, private val listener: Re
     inner class KuharskiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
         val naziv: TextView = itemView.findViewById(R.id.nazivItem)
+        val slika: ImageView = itemView.findViewById(R.id.slikaItem)
         var profilOkusa: TextView = itemView.findViewById(R.id.profilOkusaItem)
         var jelo1: TextView = itemView.findViewById(R.id.jelo1Item)
         var jelo2: TextView = itemView.findViewById(R.id.jelo2Item)
@@ -158,6 +167,7 @@ class BiljkeRVAdapter(private var biljke: List<Biljka>, private val listener: Re
     inner class BotanickiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
         val naziv: TextView = itemView.findViewById(R.id.nazivItem)
+        val slika: ImageView = itemView.findViewById(R.id.slikaItem)
         var porodica: TextView = itemView.findViewById(R.id.porodicaItem)
         var klimatskiTip: TextView = itemView.findViewById(R.id.klimatskiTipItem)
         var zemljisniTip: TextView = itemView.findViewById(R.id.zemljisniTipItem)

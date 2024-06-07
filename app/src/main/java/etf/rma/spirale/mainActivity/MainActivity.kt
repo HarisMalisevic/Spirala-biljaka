@@ -3,6 +3,7 @@ package etf.rma.spirale.mainActivity
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -46,6 +47,8 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
     private var listFiltered: Boolean = false
     private var filteredBiljke: List<Biljka> = defaultBiljke
 
+    private var slikeBiljaka: MutableMap<String, Bitmap> = mutableMapOf()
+
     private val novaBiljkaLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
@@ -57,25 +60,27 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        getBiljkaBitmaps()
+
         setupNovaBiljkaBtn()
         setupResetBtn()
         setupModSpinner()
         setupBiljkeRecyclerView()
 
-        trefleTest()
 
     }
 
-    private fun trefleTest() {
-        val latinName = defaultBiljke[0].getLatinskiNaziv()
-
+    @SuppressLint("NotifyDataSetChanged")
+    private fun getBiljkaBitmaps() {
         val scope = CoroutineScope(Job() + Dispatchers.Main)
-
         scope.launch {
-            TrefleDAO.getBiljkaPoLatinskomNazivu(latinName)
+            for (biljka in defaultBiljke) {
+                val image = TrefleDAO.getImage(biljka)
+                slikeBiljaka[biljka.naziv] = image
+                biljkeRVAdapter.notifyDataSetChanged()
+            }
         }
     }
-
 
     @SuppressLint("NewApi")
     private fun insertNovaBiljka(it: ActivityResult) {
@@ -113,7 +118,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
             this, LinearLayoutManager.VERTICAL, false
         )
 
-        biljkeRVAdapter = BiljkeRVAdapter(defaultBiljke, this)
+        biljkeRVAdapter = BiljkeRVAdapter(defaultBiljke, slikeBiljaka, this)
         biljkeRVAdapter.setCurrentView(currentMode)
         biljkeRecyclerView.adapter = biljkeRVAdapter
     }
