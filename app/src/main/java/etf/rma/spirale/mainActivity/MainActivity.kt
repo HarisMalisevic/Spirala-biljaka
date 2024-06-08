@@ -15,6 +15,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import etf.rma.spirale.App
 import etf.rma.spirale.biljka.Biljka
 import etf.rma.spirale.biljka.KlimatskiTip
 import etf.rma.spirale.biljka.MedicinskaKorist
@@ -56,6 +57,8 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
             }
         }
 
+    private val trefleDAO = TrefleDAO(App.context)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -72,15 +75,15 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun getBiljkaBitmaps() {
-    val scope = CoroutineScope(Job() + Dispatchers.Main)
-    for (biljka in defaultBiljke) {
-        scope.launch {
-            val image = TrefleDAO().getImage(biljka)
-            slikeBiljaka[biljka.naziv] = image
-            biljkeRVAdapter.notifyItemChanged(defaultBiljke.indexOf(biljka))
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
+        for (biljka in defaultBiljke) {
+            scope.launch {
+                val image = trefleDAO.getImage(biljka)
+                slikeBiljaka[biljka.naziv] = image
+                biljkeRVAdapter.notifyItemChanged(defaultBiljke.indexOf(biljka))
+            }
         }
     }
-}
 
     @SuppressLint("NewApi", "NotifyDataSetChanged")
     private fun insertNovaBiljka(it: ActivityResult) {
@@ -93,7 +96,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
             listFiltered = false
         }
         scope.launch {
-            val image = TrefleDAO().getImage(novaBiljka)
+            val image = trefleDAO.getImage(novaBiljka)
             slikeBiljaka[novaBiljka.naziv] = image
             biljkeRVAdapter.notifyDataSetChanged()
             refreshDisplayedBiljke()
@@ -187,7 +190,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         biljkeList: List<Biljka>, referenceBiljka: Biljka
     ): List<Biljka> {
         val referenceJela: Set<String> = referenceBiljka.jela.toSet()
-        val referenceProfilOkusa: ProfilOkusaBiljke = referenceBiljka.profilOkusa
+        val referenceProfilOkusa: ProfilOkusaBiljke? = referenceBiljka.profilOkusa
 
         val filteredBiljke = biljkeList.filter { biljka ->
             val biljkaJelaSet = biljka.jela.toSet()
