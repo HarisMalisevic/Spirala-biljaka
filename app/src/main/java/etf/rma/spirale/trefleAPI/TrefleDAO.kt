@@ -1,11 +1,9 @@
 package etf.rma.spirale.trefleAPI
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
-import androidx.core.graphics.scale
-import etf.rma.spirale.App
-import etf.rma.spirale.R
 import etf.rma.spirale.biljka.Biljka
 import etf.rma.spirale.biljka.KlimatskiTip
 import etf.rma.spirale.biljka.Zemljiste
@@ -19,7 +17,17 @@ import java.net.URL
 
 class TrefleDAO {
 
-    private val defaultBitmap = Constants.defaultBitmap
+    private var context: Context? = null
+    private var defaultBitmap: Bitmap? = null
+
+    constructor() {
+    }
+
+    constructor(context: Context) {
+        this.context = context
+        this.defaultBitmap = Constants.getDefaultBitmap(context)
+    }
+
 
     // Private:
     private suspend fun getBiljkaPoLatinskomNazivu(latinskiNaziv: String): TrefleSpecies? {
@@ -43,7 +51,7 @@ class TrefleDAO {
                 return@withContext null
             }
 
-            val firstSpeciesID = trefleSearchResponse.body()!!.data[0].id 
+            val firstSpeciesID = trefleSearchResponse.body()!!.data[0].id
 
             val trefleSpeciesResponse = try {
                 RetrofitClient.trefleAPI.getSpeciesByID(firstSpeciesID)
@@ -74,24 +82,24 @@ class TrefleDAO {
         return withContext(Dispatchers.IO) {
 
             if (trefleSpeciesResponse == null) {
-                Log.d("getImage", "Trefle response is null!")
-                return@withContext defaultBitmap
+                //Log.d("getImage", "Trefle response is null!")
+                return@withContext defaultBitmap!!
             }
 
             if (trefleSpeciesResponse.data.imageUrl == null) {
-                Log.d("getImage", "Image URL is null!")
-                return@withContext defaultBitmap
+                //Log.d("getImage", "Image URL is null!")
+                return@withContext defaultBitmap!!
             }
 
             val url = URL(trefleSpeciesResponse.data.imageUrl)
 
-            Log.d("getImage", url.toString())
+            //Log.d("getImage", url.toString())
 
             return@withContext try {
                 BitmapFactory.decodeStream(url.openConnection().getInputStream())
             } catch (e: IOException) {
                 println(e)
-                defaultBitmap
+                defaultBitmap!!
             }
         }
 
