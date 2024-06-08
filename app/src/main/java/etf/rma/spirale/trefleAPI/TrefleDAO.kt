@@ -182,7 +182,7 @@ class TrefleDAO {
         builder: Biljka.Builder,
         trefleSpeciesResponse: TrefleSpecies
     ) {
-        val trefleSoilTexture = trefleSpeciesResponse.data.growth.soilTexture ?: return
+        val trefleSoilTexture = (trefleSpeciesResponse.data.growth.soilTexture ?: return) as Int
 
 
         when (trefleSoilTexture) {
@@ -202,9 +202,9 @@ class TrefleDAO {
         builder: Biljka.Builder,
         trefleSpeciesResponse: TrefleSpecies
     ) {
-        val trefleLight = trefleSpeciesResponse.data.growth.light ?: return
+        val trefleLight = (trefleSpeciesResponse.data.growth.light ?: return) as Int
         val trefleAtmosphericHumidity =
-            trefleSpeciesResponse.data.growth.atmosphericHumidity ?: return
+            (trefleSpeciesResponse.data.growth.atmosphericHumidity ?: return) as Int
 
         if (trefleLight in 6..9 || trefleAtmosphericHumidity in 1..5)
             builder.addKlimatskiTip(KlimatskiTip.SREDOZEMNA)
