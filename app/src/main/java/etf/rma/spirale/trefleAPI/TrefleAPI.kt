@@ -24,4 +24,12 @@ interface TrefleAPI {
     ): Response<TrefleSpecies>
 
 
+    @GET("api/v1/species/search")
+    suspend fun filterByFlowerColor(
+        @Query("filter[flower_color]") flowerColor: String,
+        @Query("q") query: String,
+        @Query("token") apiToken: String = Constants.API_TOKEN
+    ): Response<TrefleSearchResponse>
+
+
 }
