@@ -123,7 +123,8 @@ class TrefleDAO {
             biljkaBuilder.addJelo(jelo)
         }
 
-        biljkaBuilder.setProfilOkusa(biljka.profilOkusa)
+        if (biljka.profilOkusa != null)
+            biljkaBuilder.setProfilOkusa(biljka.profilOkusa)
 
         fixPorodica(biljka, biljkaBuilder, trefleSpeciesResponse)
         fixEdible(biljka, biljkaBuilder, trefleSpeciesResponse)
