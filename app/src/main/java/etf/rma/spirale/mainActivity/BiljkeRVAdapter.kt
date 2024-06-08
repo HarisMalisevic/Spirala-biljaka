@@ -101,7 +101,9 @@ class BiljkeRVAdapter(
 
                     )
                 )
-                kuharskiVH.profilOkusa.text = item.profilOkusa.opis
+
+                if (item.profilOkusa != null)
+                    kuharskiVH.profilOkusa.text = item.profilOkusa.opis
 
                 if (item.jela.size > 0) kuharskiVH.jelo1.text = item.jela[0]
                 else kuharskiVH.jelo1.text = ""
