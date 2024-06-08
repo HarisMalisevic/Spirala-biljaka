@@ -135,6 +135,39 @@ class TrefleDAO {
         return biljkaBuilder.build()
     }
 
+    suspend fun getPlantsWithFlowerColor(flowerColor: String, substr: String): List<Biljka> {
+        val trefleSearchResponse = try {
+            RetrofitClient.trefleAPI.filterByFlowerColor(flowerColor, substr)
+        } catch (e: IOException) {
+            Log.e("Exception!", "IOException - internet connection issue!")
+            return emptyList()
+        } catch (e: HttpException) {
+            Log.e("Exception!", "HttpException")
+            return emptyList()
+        }
+
+        if (!trefleSearchResponse.isSuccessful || trefleSearchResponse.body() == null) {
+            Log.e("Error", "API Response not successful!")
+            return emptyList()
+        }
+
+        val plants = trefleSearchResponse.body()!!.data.map { treflePlant ->
+            Biljka(
+                naziv = treflePlant.commonName + " (" + treflePlant.scientificName + ")",
+                porodica = treflePlant.family,
+                medicinskoUpozorenje = "",
+                medicinskeKoristi = emptyList(),
+                profilOkusa = null,
+                jela = emptyList(),
+                klimatskiTipovi = emptyList(),
+                zemljisniTipovi = emptyList()
+            )
+        }
+
+        return plants
+    }
+
+
     private fun fixPorodica(
         biljka: Biljka,
         builder: Biljka.Builder, trefleSpeciesResponse: TrefleSpecies
@@ -227,5 +260,4 @@ class TrefleDAO {
 
     }
 
-    //TODO: Implementirati suspend fun getPlantsWithFlowerColor(flowerColor: String, substr: String): List<Biljka> {}
 }
