@@ -22,4 +22,6 @@
     <string name="slika_nove_biljke">Slika nove biljke koja se dodaje</string>
     <string name="dodajJeloBtn_izmijeniJelo">Izmijeni jelo</string>
     <string name="dodajJeloBtn_dodajJelo">Dodaj jelo</string>
+    <string name="pretraga_biljka">Trazi biljku...</string>
+    <string name="pretraga_btn">Brza\npretraga</string>
 </resources>

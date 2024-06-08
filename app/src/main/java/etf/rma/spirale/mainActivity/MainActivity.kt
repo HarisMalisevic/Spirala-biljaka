@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.Spinner
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import etf.rma.spirale.App
@@ -57,11 +58,15 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
             }
         }
 
+    private lateinit var bottomBar: ConstraintLayout
+
     private val trefleDAO = TrefleDAO(App.context)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        bottomBar = findViewById(R.id.bottomBar)
 
         getBiljkaBitmaps()
 
@@ -152,10 +157,25 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
                 parent: AdapterView<*>, view: View?, position: Int, id: Long
             ) {
                 currentMode = when (position) {
-                    0 -> medicinskiMod
-                    1 -> kuharskiMod
-                    2 -> botanickiMod
-                    else -> medicinskiMod
+                    0 -> {
+                        bottomBar.visibility = View.GONE
+                        medicinskiMod
+                    }
+
+                    1 -> {
+                        bottomBar.visibility = View.GONE
+                        kuharskiMod
+                    }
+
+                    2 -> {
+                        bottomBar.visibility = View.VISIBLE
+                        botanickiMod
+                    }
+
+                    else -> {
+                        bottomBar.visibility = View.GONE
+                        medicinskiMod
+                    }
                 }
                 biljkeRVAdapter.setCurrentView(currentMode)
 
