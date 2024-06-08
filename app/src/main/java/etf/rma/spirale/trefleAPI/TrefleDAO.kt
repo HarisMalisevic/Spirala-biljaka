@@ -140,7 +140,7 @@ class TrefleDAO {
     ) {
         val treflePorodica = trefleSpeciesResponse.data.family ?: return
         builder.setPorodica(treflePorodica)
-        Log.d("Porodica", treflePorodica)
+        // Log.d("Porodica", treflePorodica)
     }
 
     private fun fixEdible(
@@ -202,26 +202,26 @@ class TrefleDAO {
         builder: Biljka.Builder,
         trefleSpeciesResponse: TrefleSpecies
     ) {
-        val trefleLight = (trefleSpeciesResponse.data.growth.light ?: return) as Int
+        val trefleLight = (trefleSpeciesResponse.data.growth.light ?: return) as Double
         val trefleAtmosphericHumidity =
-            (trefleSpeciesResponse.data.growth.atmosphericHumidity ?: return) as Int
+            (trefleSpeciesResponse.data.growth.atmosphericHumidity ?: return) as Double
 
-        if (trefleLight in 6..9 || trefleAtmosphericHumidity in 1..5)
+        if (trefleLight in 6.0..9.0 || trefleAtmosphericHumidity in 1.0..5.0)
             builder.addKlimatskiTip(KlimatskiTip.SREDOZEMNA)
 
-        if (trefleLight in 8..10 || trefleAtmosphericHumidity in 7..10)
+        if (trefleLight in 8.0..10.0 || trefleAtmosphericHumidity in 7.0..10.0)
             builder.addKlimatskiTip(KlimatskiTip.TROPSKA)
 
-        if (trefleLight in 6..9 || trefleAtmosphericHumidity in 5..8)
+        if (trefleLight in 6.0..9.0 || trefleAtmosphericHumidity in 5.0..8.0)
             builder.addKlimatskiTip(KlimatskiTip.SUBTROPSKA)
 
-        if (trefleLight in 4..7 || trefleAtmosphericHumidity in 3..7)
+        if (trefleLight in 4.0..7.0 || trefleAtmosphericHumidity in 3.0..7.0)
             builder.addKlimatskiTip(KlimatskiTip.UMJERENA)
 
-        if (trefleLight in 7..9 || trefleAtmosphericHumidity in 1..2)
+        if (trefleLight in 7.0..9.0 || trefleAtmosphericHumidity in 1.0..2.0)
             builder.addKlimatskiTip(KlimatskiTip.SUHA)
 
-        if (trefleLight in 0..5 || trefleAtmosphericHumidity in 3..7)
+        if (trefleLight in 0.0..5.0 || trefleAtmosphericHumidity in 3.0..7.0)
             builder.addKlimatskiTip(KlimatskiTip.PLANINSKA)
 
     }

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import etf.rma.spirale.App
 import etf.rma.spirale.biljka.Biljka
 import etf.rma.spirale.R
 import etf.rma.spirale.values.Constants
@@ -73,7 +74,7 @@ class BiljkeRVAdapter(
                 medicinskiVH.slika.setImageBitmap(
                     slikeBiljaka.getOrDefault(
                         item.naziv,
-                        Constants.defaultBitmap
+                        Constants.getDefaultBitmap(App.context)
                     )
                 )
                 medicinskiVH.upozorenje.text = item.medicinskoUpozorenje
@@ -96,7 +97,8 @@ class BiljkeRVAdapter(
                 kuharskiVH.slika.setImageBitmap(
                     slikeBiljaka.getOrDefault(
                         item.naziv,
-                        Constants.defaultBitmap
+                        Constants.getDefaultBitmap(App.context)
+
                     )
                 )
                 kuharskiVH.profilOkusa.text = item.profilOkusa.opis
@@ -117,7 +119,8 @@ class BiljkeRVAdapter(
                 botanickiVH.slika.setImageBitmap(
                     slikeBiljaka.getOrDefault(
                         item.naziv,
-                        Constants.defaultBitmap
+                        Constants.getDefaultBitmap(App.context)
+
                     )
                 )
                 botanickiVH.porodica.text = item.porodica

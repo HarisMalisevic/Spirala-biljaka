@@ -76,7 +76,7 @@ data class Biljka(
             // if (medicinskeKoristi.isEmpty()) throw IllegalArgumentException("Mora biti bar jedna medicinska korist")
             // if (jela.isEmpty()) throw IllegalArgumentException("Mora biti bar jedno jelo")
 
-            Log.d("BUILDER Porodica", porodica)
+            // Log.d("BUILDER Porodica", porodica)
             return Biljka(
                 naziv,
                 porodica,
