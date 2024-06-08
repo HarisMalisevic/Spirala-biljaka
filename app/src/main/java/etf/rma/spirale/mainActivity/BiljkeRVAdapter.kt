@@ -26,6 +26,8 @@ class BiljkeRVAdapter(
 
     private var currentView = medicinskiView
 
+    private var defaultBitmap: Bitmap = Constants.getDefaultBitmap(App.context)
+
     fun setCurrentView(value: Int) {
         this.currentView = value
     }
@@ -74,7 +76,7 @@ class BiljkeRVAdapter(
                 medicinskiVH.slika.setImageBitmap(
                     slikeBiljaka.getOrDefault(
                         item.naziv,
-                        Constants.getDefaultBitmap(App.context)
+                        defaultBitmap
                     )
                 )
                 medicinskiVH.upozorenje.text = item.medicinskoUpozorenje
@@ -97,7 +99,7 @@ class BiljkeRVAdapter(
                 kuharskiVH.slika.setImageBitmap(
                     slikeBiljaka.getOrDefault(
                         item.naziv,
-                        Constants.getDefaultBitmap(App.context)
+                        defaultBitmap
 
                     )
                 )
@@ -121,7 +123,7 @@ class BiljkeRVAdapter(
                 botanickiVH.slika.setImageBitmap(
                     slikeBiljaka.getOrDefault(
                         item.naziv,
-                        Constants.getDefaultBitmap(App.context)
+                        defaultBitmap
 
                     )
                 )
