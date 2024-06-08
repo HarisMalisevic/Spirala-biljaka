@@ -146,6 +146,8 @@ class TrefleDAO {
             return emptyList()
         }
 
+        // Log.d("getPlantsWithFlowerColor", trefleSearchResponse.toString())
+
         if (!trefleSearchResponse.isSuccessful || trefleSearchResponse.body() == null) {
             Log.e("Error", "API Response not successful!")
             return emptyList()

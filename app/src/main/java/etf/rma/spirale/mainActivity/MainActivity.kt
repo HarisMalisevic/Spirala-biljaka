@@ -92,6 +92,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         val scope = CoroutineScope(Job() + Dispatchers.Main)
 
         scope.launch {
+
             defaultBiljke.add(TrefleDAO().fixData(novaBiljka))
             listFiltered = false
         }
