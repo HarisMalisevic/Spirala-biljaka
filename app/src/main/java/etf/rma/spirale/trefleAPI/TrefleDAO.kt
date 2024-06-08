@@ -9,6 +9,7 @@ import etf.rma.spirale.R
 import etf.rma.spirale.biljka.Biljka
 import etf.rma.spirale.biljka.KlimatskiTip
 import etf.rma.spirale.biljka.Zemljiste
+import etf.rma.spirale.values.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -18,9 +19,7 @@ import java.net.URL
 
 class TrefleDAO {
 
-    private val defaultBitmap = BitmapFactory.decodeResource(
-        App.context.resources, R.drawable.plant
-    ).scale(300, 300)
+    private val defaultBitmap = Constants.defaultBitmap
 
     // Private:
     private suspend fun getBiljkaPoLatinskomNazivu(latinskiNaziv: String): TrefleSpecies? {
@@ -44,7 +43,7 @@ class TrefleDAO {
                 return@withContext null
             }
 
-            val firstSpeciesID = trefleSearchResponse.body()!!.data[0].id
+            val firstSpeciesID = trefleSearchResponse.body()!!.data[0].id 
 
             val trefleSpeciesResponse = try {
                 RetrofitClient.trefleAPI.getSpeciesByID(firstSpeciesID)
@@ -132,8 +131,8 @@ class TrefleDAO {
         builder: Biljka.Builder, trefleSpeciesResponse: TrefleSpecies
     ) {
         val treflePorodica = trefleSpeciesResponse.data.family ?: return
-        if (treflePorodica != "")
-            builder.setPorodica(treflePorodica)
+        builder.setPorodica(treflePorodica)
+        Log.d("Porodica", treflePorodica)
     }
 
     private fun fixEdible(
@@ -216,7 +215,6 @@ class TrefleDAO {
 
         if (trefleLight in 0..5 || trefleAtmosphericHumidity in 3..7)
             builder.addKlimatskiTip(KlimatskiTip.PLANINSKA)
-
 
     }
 

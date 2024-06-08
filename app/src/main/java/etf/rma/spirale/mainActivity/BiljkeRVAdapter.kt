@@ -2,7 +2,6 @@ package etf.rma.spirale.mainActivity
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import etf.rma.spirale.biljka.Biljka
 import etf.rma.spirale.R
+import etf.rma.spirale.values.Constants
 
 
 class BiljkeRVAdapter(
@@ -70,8 +70,14 @@ class BiljkeRVAdapter(
             medicinskiView -> {
                 val medicinskiVH: MedicinskiViewHolder = holder as MedicinskiViewHolder
                 medicinskiVH.naziv.text = item.naziv
-                medicinskiVH.slika.setImageBitmap(slikeBiljaka[item.naziv])
+                medicinskiVH.slika.setImageBitmap(
+                    slikeBiljaka.getOrDefault(
+                        item.naziv,
+                        Constants.defaultBitmap
+                    )
+                )
                 medicinskiVH.upozorenje.text = item.medicinskoUpozorenje
+
                 if (item.medicinskeKoristi.size > 0) medicinskiVH.korist1.text =
                     item.medicinskeKoristi[0].opis
                 else medicinskiVH.korist1.text = ""
@@ -87,8 +93,14 @@ class BiljkeRVAdapter(
             kuharskiView -> {
                 val kuharskiVH: KuharskiViewHolder = holder as KuharskiViewHolder
                 kuharskiVH.naziv.text = item.naziv
-                kuharskiVH.slika.setImageBitmap(slikeBiljaka[item.naziv])
+                kuharskiVH.slika.setImageBitmap(
+                    slikeBiljaka.getOrDefault(
+                        item.naziv,
+                        Constants.defaultBitmap
+                    )
+                )
                 kuharskiVH.profilOkusa.text = item.profilOkusa.opis
+
                 if (item.jela.size > 0) kuharskiVH.jelo1.text = item.jela[0]
                 else kuharskiVH.jelo1.text = ""
                 if (item.jela.size > 1) kuharskiVH.jelo2.text = item.jela[1]
@@ -100,11 +112,24 @@ class BiljkeRVAdapter(
 
             botanickiView -> {
                 val botanickiVH: BotanickiViewHolder = holder as BotanickiViewHolder
+
                 botanickiVH.naziv.text = item.naziv
-                botanickiVH.slika.setImageBitmap(slikeBiljaka[item.naziv])
+                botanickiVH.slika.setImageBitmap(
+                    slikeBiljaka.getOrDefault(
+                        item.naziv,
+                        Constants.defaultBitmap
+                    )
+                )
                 botanickiVH.porodica.text = item.porodica
-                botanickiVH.klimatskiTip.text = item.klimatskiTipovi[0].opis
-                botanickiVH.zemljisniTip.text = item.zemljisniTipovi[0].naziv
+
+                if (item.klimatskiTipovi.isNotEmpty())
+                    botanickiVH.klimatskiTip.text = item.klimatskiTipovi[0].opis
+                else botanickiVH.klimatskiTip.text = ""
+
+                if (item.zemljisniTipovi.isNotEmpty())
+                    botanickiVH.zemljisniTip.text = item.zemljisniTipovi[0].naziv
+                else
+                    botanickiVH.zemljisniTip.text = ""
             }
 
         }

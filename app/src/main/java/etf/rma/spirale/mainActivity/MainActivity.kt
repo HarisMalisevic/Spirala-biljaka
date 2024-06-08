@@ -72,36 +72,32 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun getBiljkaBitmaps() {
-        val scope = CoroutineScope(Job() + Dispatchers.Main)
+    val scope = CoroutineScope(Job() + Dispatchers.Main)
+    for (biljka in defaultBiljke) {
         scope.launch {
-            for (biljka in defaultBiljke) {
-                val image = TrefleDAO().getImage(biljka)
-                slikeBiljaka[biljka.naziv] = image
-                biljkeRVAdapter.notifyDataSetChanged()
-            }
+            val image = TrefleDAO().getImage(biljka)
+            slikeBiljaka[biljka.naziv] = image
+            biljkeRVAdapter.notifyItemChanged(defaultBiljke.indexOf(biljka))
         }
     }
+}
 
     @SuppressLint("NewApi", "NotifyDataSetChanged")
     private fun insertNovaBiljka(it: ActivityResult) {
-        var novaBiljka: Biljka = it.data?.getSerializableExtra("novaBiljka", Biljka::class.java)!!
+        val novaBiljka: Biljka = it.data?.getSerializableExtra("novaBiljka", Biljka::class.java)!!
 
         val scope = CoroutineScope(Job() + Dispatchers.Main)
 
         scope.launch {
-            novaBiljka = TrefleDAO().fixData(novaBiljka)
+            defaultBiljke.add(TrefleDAO().fixData(novaBiljka))
+            listFiltered = false
         }
-
-        defaultBiljke.add(novaBiljka)
-        listFiltered = false
-
         scope.launch {
             val image = TrefleDAO().getImage(novaBiljka)
             slikeBiljaka[novaBiljka.naziv] = image
             biljkeRVAdapter.notifyDataSetChanged()
+            refreshDisplayedBiljke()
         }
-
-        refreshDisplayedBiljke()
     }
 
     private fun setupResetBtn() {

@@ -1,6 +1,6 @@
 package etf.rma.spirale.trefleAPI
 
-import etf.rma.spirale.values.Constraints
+import etf.rma.spirale.values.Constants
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -17,7 +17,7 @@ object RetrofitClient {
 
     private val retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl(Constraints.BASE_URL)
+            .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(httpClient)
             .build()

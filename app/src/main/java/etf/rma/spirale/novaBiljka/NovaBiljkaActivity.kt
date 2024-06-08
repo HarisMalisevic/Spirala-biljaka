@@ -346,12 +346,6 @@ class NovaBiljkaActivity : AppCompatActivity() {
             return false
         }
 
-
-        if (editText.text.length < 2) {
-            editText.error = "Sadrzaj prekratak"
-            return false
-        }
-
         return true
     }
 
