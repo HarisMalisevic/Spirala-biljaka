@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Spinner
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
     private var listFiltered: Boolean = false
     private var filteredBiljke: List<Biljka> = defaultBiljke
 
-    private var slikeBiljaka: MutableMap<String, Bitmap> = mutableMapOf()
+    private var slikeDefaultBiljaka: MutableMap<String, Bitmap> = mutableMapOf()
 
     private val novaBiljkaLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -59,6 +60,9 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         }
 
     private lateinit var bottomBar: ConstraintLayout
+    private lateinit var brzaPretragaBtn: Button
+    private lateinit var bojaSpinner: Spinner
+    private lateinit var pretragaET: EditText
 
     private val trefleDAO = TrefleDAO(App.context)
 
@@ -66,14 +70,13 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        bottomBar = findViewById(R.id.bottomBar)
-
         getBiljkaBitmaps()
 
         setupNovaBiljkaBtn()
         setupResetBtn()
         setupModSpinner()
         setupBiljkeRecyclerView()
+        setupBottomBar()
 
 
     }
@@ -84,7 +87,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         for (biljka in defaultBiljke) {
             scope.launch {
                 val image = trefleDAO.getImage(biljka)
-                slikeBiljaka[biljka.naziv] = image
+                slikeDefaultBiljaka[biljka.naziv] = image
                 biljkeRVAdapter.notifyItemChanged(defaultBiljke.indexOf(biljka))
             }
         }
@@ -103,7 +106,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         }
         scope.launch {
             val image = trefleDAO.getImage(novaBiljka)
-            slikeBiljaka[novaBiljka.naziv] = image
+            slikeDefaultBiljaka[novaBiljka.naziv] = image
             biljkeRVAdapter.notifyDataSetChanged()
             refreshDisplayedBiljke()
         }
@@ -137,7 +140,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
             this, LinearLayoutManager.VERTICAL, false
         )
 
-        biljkeRVAdapter = BiljkeRVAdapter(defaultBiljke, slikeBiljaka, this)
+        biljkeRVAdapter = BiljkeRVAdapter(defaultBiljke, slikeDefaultBiljaka, this)
         biljkeRVAdapter.setCurrentView(currentMode)
         biljkeRecyclerView.adapter = biljkeRVAdapter
     }
@@ -187,12 +190,48 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    private fun setupBottomBar() {
+        bottomBar = findViewById(R.id.bottomBar)
+        brzaPretragaBtn = findViewById(R.id.brzaPretraga)
+        bojaSpinner = findViewById(R.id.bojaSPIN)
+        pretragaET = findViewById(R.id.pretragaET)
+
+        ArrayAdapter.createFromResource(
+            this, R.array.color_Spinner_options, android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            bojaSpinner.adapter = adapter
+        }
+
+        brzaPretragaBtn.setOnClickListener {
+            val flowerColor = bojaSpinner.selectedItem.toString()
+            val substr = pretragaET.text.toString()
+
+            val scope = CoroutineScope(Job() + Dispatchers.Main)
+            scope.launch {
+                val plantsFilteredByFlowerColor =
+                    trefleDAO.getPlantsWithFlowerColor(flowerColor, substr)
+                biljkeRVAdapter.setBiljke(plantsFilteredByFlowerColor)
+                biljkeRVAdapter.notifyDataSetChanged()
+
+                val plantBitmaps = mutableMapOf<String, Bitmap>()
+                for (plant in plantsFilteredByFlowerColor) {
+                    val image = trefleDAO.getImage(plant)
+                    plantBitmaps[plant.naziv] = image
+                    biljkeRVAdapter.setBitmaps(plantBitmaps)
+                    biljkeRVAdapter.notifyDataSetChanged()
+                }
+            }
+        }
+    }
+
     private fun refreshDisplayedBiljke() {
         if (listFiltered) {
-            biljkeRVAdapter.updateBiljke(filteredBiljke)
+            biljkeRVAdapter.updateBiljke(filteredBiljke, slikeDefaultBiljaka)
             return
         }
-        biljkeRVAdapter.updateBiljke(defaultBiljke)
+        biljkeRVAdapter.updateBiljke(defaultBiljke, slikeDefaultBiljaka)
     }
 
     private fun filterMedicinskiBiljke(

@@ -11,7 +11,7 @@ data class TrefleSearchResponse(
     data class Data(
         @SerializedName("author") val author: String,
         @SerializedName("bibliography") val bibliography: String,
-        @SerializedName("common_name") val commonName: String,
+        @SerializedName("common_name") val commonName: String?,
         @SerializedName("family") val family: String,
         @SerializedName("family_common_name") val familyCommonName: Any?,
         @SerializedName("genus") val genus: String,

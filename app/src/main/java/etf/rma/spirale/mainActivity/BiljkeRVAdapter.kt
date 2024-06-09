@@ -148,8 +148,21 @@ class BiljkeRVAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateBiljke(biljke: List<Biljka>) {
+    fun updateBiljke(biljke: List<Biljka>, slikeBiljaka: MutableMap<String, Bitmap>) {
         this.biljke = biljke
+        this.slikeBiljaka = slikeBiljaka
+        this.notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setBiljke(biljke: List<Biljka>) {
+        this.biljke = biljke
+        this.notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setBitmaps(slikeBiljaka: MutableMap<String, Bitmap>) {
+        this.slikeBiljaka = slikeBiljaka
         this.notifyDataSetChanged()
     }
 

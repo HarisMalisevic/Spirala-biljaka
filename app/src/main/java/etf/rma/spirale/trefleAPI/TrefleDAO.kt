@@ -155,7 +155,7 @@ class TrefleDAO {
 
         val plants = trefleSearchResponse.body()!!.data.map { treflePlant ->
             Biljka(
-                naziv = treflePlant.commonName + " (" + treflePlant.scientificName + ")",
+                naziv = (treflePlant.commonName ?: "") + " (" + treflePlant.scientificName + ")",
                 porodica = treflePlant.family,
                 medicinskoUpozorenje = "",
                 medicinskeKoristi = emptyList(),
