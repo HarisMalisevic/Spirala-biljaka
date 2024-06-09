@@ -66,16 +66,19 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
 
     private val trefleDAO = TrefleDAO(App.context)
 
+    private var blockFiltering: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         getBiljkaBitmaps()
 
+        setupBiljkeRecyclerView()
+
         setupNovaBiljkaBtn()
         setupResetBtn()
         setupModSpinner()
-        setupBiljkeRecyclerView()
         setupBottomBar()
 
 
@@ -119,6 +122,8 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
             listFiltered = false
             filteredBiljke = defaultBiljke
 
+            displayDefaultBiljke()
+
             refreshDisplayedBiljke()
         }
     }
@@ -127,10 +132,18 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         novaBiljkaBtn = findViewById(R.id.novaBiljkaBtn)
 
         novaBiljkaBtn.setOnClickListener {
+            displayDefaultBiljke()
             val intent = Intent(this, NovaBiljkaActivity::class.java)
             // startActivityForResult(intent, REQUEST_CODE)
             novaBiljkaLauncher.launch(intent)
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun displayDefaultBiljke() {
+        blockFiltering = false
+        biljkeRVAdapter.updateBiljke(defaultBiljke, slikeDefaultBiljaka)
+        biljkeRVAdapter.notifyDataSetChanged()
     }
 
     private fun setupBiljkeRecyclerView() {
@@ -153,6 +166,8 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             modSpinner.adapter = adapter
+
+            displayDefaultBiljke()
         }
 
         modSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -208,6 +223,8 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
             val flowerColor = bojaSpinner.selectedItem.toString()
             val substr = pretragaET.text.toString()
 
+            blockFiltering = true
+
             val scope = CoroutineScope(Job() + Dispatchers.Main)
             scope.launch {
                 val plantsFilteredByFlowerColor =
@@ -217,6 +234,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
 
                 val plantBitmaps = mutableMapOf<String, Bitmap>()
                 for (plant in plantsFilteredByFlowerColor) {
+                    if (!blockFiltering) break
                     val image = trefleDAO.getImage(plant)
                     plantBitmaps[plant.naziv] = image
                     biljkeRVAdapter.setBitmaps(plantBitmaps)
@@ -300,6 +318,9 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
     }
 
     override fun onItemClick(position: Int) {
+
+        if (blockFiltering)
+            return
 
 
         val clickedBiljka: Biljka = if (listFiltered) filteredBiljke[position]
