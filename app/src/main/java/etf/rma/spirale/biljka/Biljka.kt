@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "biljka")
 data class Biljka(
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "idBiljke") val idBiljke: Int = 0,
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "idBiljke") val idBiljke: Long? = null,
     @ColumnInfo(name = "naziv") val naziv: String,
     @ColumnInfo(name = "porodica") val porodica: String,
     @ColumnInfo(name = "medicinskoUpozorenje") val medicinskoUpozorenje: String,
@@ -16,7 +16,8 @@ data class Biljka(
     @ColumnInfo(name = "profilOkusa") val profilOkusa: ProfilOkusaBiljke?,
     @ColumnInfo(name = "jela") val jela: List<String>,
     @ColumnInfo(name = "klimatskiTipovi") val klimatskiTipovi: List<KlimatskiTip>,
-    @ColumnInfo(name = "zemljisniTipovi") val zemljisniTipovi: List<Zemljiste>
+    @ColumnInfo(name = "zemljisniTipovi") val zemljisniTipovi: List<Zemljiste>,
+    @ColumnInfo(name = "onlineChecked") val onlineChecked: Boolean = false
 ) : Serializable {
 
     fun getLatinskiNaziv(): String {
