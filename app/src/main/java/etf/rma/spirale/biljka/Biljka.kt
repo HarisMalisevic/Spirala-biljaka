@@ -1,17 +1,22 @@
 package etf.rma.spirale.biljka
 
 import android.util.Log
+import androidx.room.ColumnInfo
 import java.io.Serializable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
+@Entity(tableName = "biljka")
 data class Biljka(
-    val naziv: String,
-    val porodica: String,
-    val medicinskoUpozorenje: String,
-    val medicinskeKoristi: List<MedicinskaKorist>,
-    val profilOkusa: ProfilOkusaBiljke?,
-    val jela: List<String>,
-    val klimatskiTipovi: List<KlimatskiTip>,
-    val zemljisniTipovi: List<Zemljiste>
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "idBiljke") val idBiljke: Int = 0,
+    @ColumnInfo(name = "naziv") val naziv: String,
+    @ColumnInfo(name = "porodica") val porodica: String,
+    @ColumnInfo(name = "medicinskoUpozorenje") val medicinskoUpozorenje: String,
+    @ColumnInfo(name = "medicinskeKoristi") val medicinskeKoristi: List<MedicinskaKorist>,
+    @ColumnInfo(name = "profilOkusa") val profilOkusa: ProfilOkusaBiljke?,
+    @ColumnInfo(name = "jela") val jela: List<String>,
+    @ColumnInfo(name = "klimatskiTipovi") val klimatskiTipovi: List<KlimatskiTip>,
+    @ColumnInfo(name = "zemljisniTipovi") val zemljisniTipovi: List<Zemljiste>
 ) : Serializable {
 
     fun getLatinskiNaziv(): String {
@@ -78,6 +83,7 @@ data class Biljka(
 
             // Log.d("BUILDER Porodica", porodica)
             return Biljka(
+                0,
                 naziv,
                 porodica,
                 medicinskoUpozorenje,
