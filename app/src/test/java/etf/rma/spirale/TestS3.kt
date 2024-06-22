@@ -5,7 +5,7 @@ import etf.rma.spirale.biljka.KlimatskiTip
 import etf.rma.spirale.biljka.MedicinskaKorist
 import etf.rma.spirale.biljka.ProfilOkusaBiljke
 import etf.rma.spirale.biljka.Zemljiste
-import etf.rma.spirale.trefleAPI.TrefleDAO
+import etf.rma.spirale.dataPersistence.trefleAPI.TrefleDAO
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.JUnitSoftAssertions
 import org.junit.Assert.assertTrue

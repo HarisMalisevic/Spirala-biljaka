@@ -1,4 +1,4 @@
-package etf.rma.spirale.trefleAPI
+package etf.rma.spirale.dataPersistence.trefleAPI
 
 import android.content.Context
 import android.graphics.Bitmap

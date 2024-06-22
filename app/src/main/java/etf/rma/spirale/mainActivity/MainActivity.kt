@@ -26,7 +26,7 @@ import etf.rma.spirale.biljka.Zemljiste
 import etf.rma.spirale.novaBiljka.NovaBiljkaActivity
 import etf.rma.spirale.R
 import etf.rma.spirale.defaultBiljke
-import etf.rma.spirale.trefleAPI.TrefleDAO
+import etf.rma.spirale.dataPersistence.trefleAPI.TrefleDAO
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

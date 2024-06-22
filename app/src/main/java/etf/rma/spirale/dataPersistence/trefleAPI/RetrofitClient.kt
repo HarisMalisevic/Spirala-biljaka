@@ -1,4 +1,4 @@
-package etf.rma.spirale.trefleAPI
+package etf.rma.spirale.dataPersistence.trefleAPI
 
 import etf.rma.spirale.values.Constants
 import okhttp3.OkHttpClient

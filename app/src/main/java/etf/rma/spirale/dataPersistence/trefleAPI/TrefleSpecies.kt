@@ -1,4 +1,4 @@
-package etf.rma.spirale.trefleAPI
+package etf.rma.spirale.dataPersistence.trefleAPI
 
 
 import com.google.gson.annotations.SerializedName
