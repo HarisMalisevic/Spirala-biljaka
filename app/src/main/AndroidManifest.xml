@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name="etf.rma.spirale.App"
@@ -16,11 +16,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SpiralaBiljaka"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
             android:name=".novaBiljka.NovaBiljkaActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".mainActivity.MainActivity"
             android:exported="true">
@@ -33,12 +34,13 @@
 
 
         <provider
-            android:authorities="etf.rma.spirale.FileProvider"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="etf.rma.spirale.FileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
-        <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
-            android:resource="@xml/file_paths"/>
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
 
         </provider>
     </application>
