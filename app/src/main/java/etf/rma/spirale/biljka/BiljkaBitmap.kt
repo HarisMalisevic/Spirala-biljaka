@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "biljkaBitmap")
+@Entity(tableName = "biljka_bitmap")
 data class BiljkaBitmap(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "idBiljke") val idBiljke: Long? = null,
     @ColumnInfo(name = "bitmap", typeAffinity = ColumnInfo.BLOB) val bitmap: ByteArray

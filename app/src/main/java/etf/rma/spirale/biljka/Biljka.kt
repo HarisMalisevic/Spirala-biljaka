@@ -1,6 +1,5 @@
 package etf.rma.spirale.biljka
 
-import android.util.Log
 import androidx.room.ColumnInfo
 import java.io.Serializable
 import androidx.room.Entity
@@ -8,7 +7,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "biljka")
 data class Biljka(
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "idBiljke") val idBiljke: Long? = null,
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "idBiljke") val id: Long? = null,
     @ColumnInfo(name = "naziv") val naziv: String,
     @ColumnInfo(name = "porodica") val porodica: String,
     @ColumnInfo(name = "medicinskoUpozorenje") val medicinskoUpozorenje: String,

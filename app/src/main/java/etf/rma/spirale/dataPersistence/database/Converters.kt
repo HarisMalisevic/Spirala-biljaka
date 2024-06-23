@@ -1,11 +1,13 @@
 package etf.rma.spirale.dataPersistence.database
 
+import android.graphics.Bitmap
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import etf.rma.spirale.biljka.KlimatskiTip
 import etf.rma.spirale.biljka.MedicinskaKorist
 import etf.rma.spirale.biljka.Zemljiste
+import java.io.ByteArrayOutputStream
 
 class Converters {
 
@@ -58,4 +60,14 @@ class Converters {
         val type = object : TypeToken<List<Zemljiste>>() {}.type
         return gson.fromJson(value, type)
     }
+
+    companion object {
+        fun bitmapToByteArray(bitmap: Bitmap): ByteArray {
+            val stream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            return stream.toByteArray()
+
+        }
+    }
+
 }
