@@ -12,43 +12,8 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import etf.rma.spirale.biljka.Biljka
 import etf.rma.spirale.biljka.BiljkaBitmap
-
-@Dao
-interface BiljkaDAO {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(biljka: Biljka): Long
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(biljkaBitmap: BiljkaBitmap): Long
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun saveBiljka(biljka: Biljka): Boolean {
-        val id = insert(biljka)
-        return id != -1L
-    }
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addImage(idBiljk: Long, bitmap: Bitmap): Boolean {
-        val biljkaBitmap = BiljkaBitmap(idBiljk, Converters.bitmapToByteArray(bitmap))
-        val id = insert(biljkaBitmap)
-        return id != -1L
-    }
-
-    @Query("SELECT * FROM biljka")
-    suspend fun getAllBiljkas(): List<Biljka>
-
-
-    @Query("DELETE FROM biljka")
-    suspend fun clearBiljkaTable()
-
-    @Query("DELETE FROM biljka_bitmap")
-    suspend fun clearBiljkaBitmapTable()
-
-    suspend fun clearData() {
-        clearBiljkaTable()
-        clearBiljkaBitmapTable()
-    }
-}
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Database(entities = [Biljka::class, BiljkaBitmap::class], version = 1)
 @TypeConverters(Converters::class)
@@ -70,10 +35,78 @@ abstract class BiljkaDatabase : RoomDatabase() {
 
         private fun buildRoomDB(context: Context): BiljkaDatabase {
             return Room.databaseBuilder(
-                context.applicationContext,
+                context,
                 BiljkaDatabase::class.java,
                 "biljke-db"
             ).build()
+        }
+    }
+
+    @Dao
+    interface BiljkaDAO {
+        @Insert(onConflict = OnConflictStrategy.IGNORE)
+        suspend fun insert(biljka: Biljka): Long
+
+        @Insert(onConflict = OnConflictStrategy.IGNORE)
+        suspend fun saveBiljka(biljka: Biljka): Boolean {
+
+            return withContext(Dispatchers.IO) {
+                try {
+                    biljka.id = insert(biljka)
+                    true
+                } catch (e: Exception) {
+                    false
+                }
+            }
+
+
+        }
+
+        @Insert
+        suspend fun insertAll(biljke: List<Biljka>)
+
+        @Insert(onConflict = OnConflictStrategy.IGNORE)
+        suspend fun insert(biljkaBitmap: BiljkaBitmap): Long
+
+        @Query("SELECT * FROM biljka WHERE id = :idBiljke")
+        suspend fun getBiljka(idBiljke: Long): Biljka?
+
+        @Query("SELECT * FROM biljka_bitmap WHERE idBiljke = :idBiljke")
+        suspend fun getBiljkaBitmap(idBiljke: Long): BiljkaBitmap?
+
+        suspend fun addImage(idBiljke: Long, bitmap: Bitmap): Boolean {
+            val biljka = getBiljka(idBiljke)
+            val biljkaBitmap = getBiljkaBitmap(idBiljke)
+            if (biljka == null || biljkaBitmap != null) {
+                return false
+            }
+            val newBiljkaBitmap =
+                BiljkaBitmap(null, idBiljke, Converters.BitmapConverter().fromBitmap(bitmap))
+            val id = insert(newBiljkaBitmap)
+            return id != -1L
+        }
+
+        @Query("SELECT * FROM biljka")
+        suspend fun getAllBiljkas(): List<Biljka>
+
+        @Query("DELETE FROM biljka")
+        suspend fun clearBiljkaTable()
+
+        @Query("DELETE FROM biljka_bitmap")
+        suspend fun clearBiljkaBitmapTable()
+
+        suspend fun clearData() {
+            clearBiljkaTable()
+            clearBiljkaBitmapTable()
+        }
+
+        suspend fun getImageFromId(idBiljke: Long): Bitmap? {
+            val biljkaBitmap = getBiljkaBitmap(idBiljke)
+            return if (biljkaBitmap != null) {
+                Converters.BitmapConverter().toBitmap(biljkaBitmap.bitmap)
+            } else {
+                null
+            }
         }
     }
 }

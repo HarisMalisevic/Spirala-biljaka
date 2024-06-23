@@ -6,7 +6,7 @@ import etf.rma.spirale.biljka.MedicinskaKorist
 import etf.rma.spirale.biljka.ProfilOkusaBiljke
 import etf.rma.spirale.biljka.Zemljiste
 
-val defaultBiljke = mutableListOf(
+var defaultBiljke = listOf(
     Biljka(
         naziv = "Bosiljak (Ocimum basilicum)",
         porodica = "Lamiaceae (usnate)",
@@ -61,3 +61,4 @@ val defaultBiljke = mutableListOf(
         zemljisniTipovi = listOf(Zemljiste.PJESKOVITO, Zemljiste.KRECNJACKO)
     )
 )
+

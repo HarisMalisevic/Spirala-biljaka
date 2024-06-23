@@ -366,6 +366,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
             getSelectedItems(zemljisniTipLV, Zemljiste.entries).toMutableList()
 
         return Biljka(
+            null,
             nazivNoveBiljke,
             porodicaNoveBiljke,
             upozorenjeNoveBiljke,

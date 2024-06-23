@@ -15,6 +15,7 @@ import android.widget.Spinner
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import etf.rma.spirale.App
@@ -25,6 +26,7 @@ import etf.rma.spirale.biljka.ProfilOkusaBiljke
 import etf.rma.spirale.biljka.Zemljiste
 import etf.rma.spirale.novaBiljka.NovaBiljkaActivity
 import etf.rma.spirale.R
+import etf.rma.spirale.dataPersistence.database.BiljkaDatabase
 import etf.rma.spirale.defaultBiljke
 import etf.rma.spirale.dataPersistence.trefleAPI.TrefleDAO
 import kotlinx.coroutines.CoroutineScope
@@ -48,7 +50,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
     private var currentMode: Int = medicinskiMod
 
     private var listFiltered: Boolean = false
-    private var filteredBiljke: List<Biljka> = defaultBiljke
+    private lateinit var filteredBiljke: List<Biljka>
 
     private var slikeDefaultBiljaka: MutableMap<String, Bitmap> = mutableMapOf()
 
@@ -66,20 +68,43 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
 
     private val trefleDAO = TrefleDAO(App.context)
 
+    private lateinit var biljkaDAO: BiljkaDatabase.BiljkaDAO
+
+
     private var blockFiltering: Boolean = false
+
+    private var radnaLista = mutableListOf<Biljka>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        getBiljkaBitmaps()
+        biljkaDAO = BiljkaDatabase.getInstance(this).biljkaDao()
 
-        setupBiljkeRecyclerView()
+        lifecycleScope.launch {
 
-        setupNovaBiljkaBtn()
-        setupResetBtn()
-        setupModSpinner()
-        setupBottomBar()
+            val biljkeIzBaze = biljkaDAO.getAllBiljkas().toMutableList()
+
+            if (biljkeIzBaze.isEmpty()) {
+                biljkaDAO.insertAll(defaultBiljke)
+                radnaLista = defaultBiljke.toMutableList()
+            } else {
+                radnaLista = biljkeIzBaze
+            }
+
+            val job2 = launch {
+                setupBiljkeRecyclerView()
+                setupNovaBiljkaBtn()
+                setupResetBtn()
+                setupModSpinner()
+                setupBottomBar()
+                getBiljkaBitmaps()
+                filteredBiljke = radnaLista
+                refreshDisplayedBiljke()
+            }
+
+            job2.join()
+        }
 
 
     }
@@ -87,11 +112,15 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
     @SuppressLint("NotifyDataSetChanged")
     private fun getBiljkaBitmaps() {
         val scope = CoroutineScope(Job() + Dispatchers.Main)
-        for (biljka in defaultBiljke) {
+        for (biljka in radnaLista) {
             scope.launch {
                 val image = trefleDAO.getImage(biljka)
+
                 slikeDefaultBiljaka[biljka.naziv] = image
-                biljkeRVAdapter.notifyItemChanged(defaultBiljke.indexOf(biljka))
+
+                biljkaDAO.addImage(biljka.id!!, image)
+
+                biljkeRVAdapter.notifyItemChanged(radnaLista.indexOf(biljka))
             }
         }
     }
@@ -100,19 +129,27 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
     private fun insertNovaBiljka(it: ActivityResult) {
         val novaBiljka: Biljka = it.data?.getSerializableExtra("novaBiljka", Biljka::class.java)!!
 
-        val scope = CoroutineScope(Job() + Dispatchers.Main)
+        lifecycleScope.launch {
 
-        scope.launch {
+            radnaLista.add(TrefleDAO().fixData(novaBiljka))
+            val fixedNovaBiljka = radnaLista.last()
 
-            defaultBiljke.add(TrefleDAO().fixData(novaBiljka))
+            biljkaDAO.saveBiljka(fixedNovaBiljka)
+
             listFiltered = false
+
+            val image = trefleDAO.getImage(fixedNovaBiljka)
+
+            val job2 = launch {
+                biljkaDAO.addImage(fixedNovaBiljka.id!!, image)
+                slikeDefaultBiljaka[fixedNovaBiljka.naziv] = image
+                biljkeRVAdapter.notifyDataSetChanged()
+                refreshDisplayedBiljke()
+            }
+            job2.join()
+
         }
-        scope.launch {
-            val image = trefleDAO.getImage(novaBiljka)
-            slikeDefaultBiljaka[novaBiljka.naziv] = image
-            biljkeRVAdapter.notifyDataSetChanged()
-            refreshDisplayedBiljke()
-        }
+
     }
 
     private fun setupResetBtn() {
@@ -122,7 +159,9 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
             listFiltered = false
             filteredBiljke = defaultBiljke
 
-            displayDefaultBiljke()
+            pretragaET.text.clear()
+
+            displayRadnaLista()
 
             refreshDisplayedBiljke()
         }
@@ -132,7 +171,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
         novaBiljkaBtn = findViewById(R.id.novaBiljkaBtn)
 
         novaBiljkaBtn.setOnClickListener {
-            displayDefaultBiljke()
+            displayRadnaLista()
             val intent = Intent(this, NovaBiljkaActivity::class.java)
             // startActivityForResult(intent, REQUEST_CODE)
             novaBiljkaLauncher.launch(intent)
@@ -140,9 +179,9 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun displayDefaultBiljke() {
+    private fun displayRadnaLista() {
         blockFiltering = false
-        biljkeRVAdapter.updateBiljke(defaultBiljke, slikeDefaultBiljaka)
+        biljkeRVAdapter.updateBiljke(radnaLista, slikeDefaultBiljaka)
         biljkeRVAdapter.notifyDataSetChanged()
     }
 
@@ -153,7 +192,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
             this, LinearLayoutManager.VERTICAL, false
         )
 
-        biljkeRVAdapter = BiljkeRVAdapter(defaultBiljke, slikeDefaultBiljaka, this)
+        biljkeRVAdapter = BiljkeRVAdapter(radnaLista, slikeDefaultBiljaka, this)
         biljkeRVAdapter.setCurrentView(currentMode)
         biljkeRecyclerView.adapter = biljkeRVAdapter
     }
@@ -167,7 +206,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             modSpinner.adapter = adapter
 
-            displayDefaultBiljke()
+            displayRadnaLista()
         }
 
         modSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -249,7 +288,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
             biljkeRVAdapter.updateBiljke(filteredBiljke, slikeDefaultBiljaka)
             return
         }
-        biljkeRVAdapter.updateBiljke(defaultBiljke, slikeDefaultBiljaka)
+        biljkeRVAdapter.updateBiljke(radnaLista, slikeDefaultBiljaka)
     }
 
     private fun filterMedicinskiBiljke(
@@ -300,19 +339,19 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
     }
 
     private fun medicinskiClick(referenceBiljka: Biljka) {
-        filteredBiljke = filterMedicinskiBiljke(defaultBiljke, referenceBiljka)
+        filteredBiljke = filterMedicinskiBiljke(radnaLista, referenceBiljka)
         listFiltered = true
         refreshDisplayedBiljke()
     }
 
     private fun kuharskiClick(referenceBiljka: Biljka) {
-        filteredBiljke = filterKuharskiBiljke(defaultBiljke, referenceBiljka)
+        filteredBiljke = filterKuharskiBiljke(radnaLista, referenceBiljka)
         listFiltered = true
         refreshDisplayedBiljke()
     }
 
     private fun botanickiClick(referenceBiljka: Biljka) {
-        filteredBiljke = filterBotanickiBiljke(defaultBiljke, referenceBiljka)
+        filteredBiljke = filterBotanickiBiljke(radnaLista, referenceBiljka)
         listFiltered = true
         refreshDisplayedBiljke()
     }
@@ -324,7 +363,7 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
 
 
         val clickedBiljka: Biljka = if (listFiltered) filteredBiljke[position]
-        else defaultBiljke[position]
+        else radnaLista[position]
 
         when (currentMode) {
             medicinskiMod -> medicinskiClick(clickedBiljka)

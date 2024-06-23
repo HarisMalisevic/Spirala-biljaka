@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "biljka")
 data class Biljka(
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "idBiljke") val id: Long? = null,
+    @PrimaryKey(autoGenerate = true) var id: Long? = null,
     @ColumnInfo(name = "naziv") val naziv: String,
     @ColumnInfo(name = "porodica") val porodica: String,
     @ColumnInfo(name = "medicinskoUpozorenje") val medicinskoUpozorenje: String,
@@ -16,7 +16,7 @@ data class Biljka(
     @ColumnInfo(name = "jela") val jela: List<String>,
     @ColumnInfo(name = "klimatskiTipovi") val klimatskiTipovi: List<KlimatskiTip>,
     @ColumnInfo(name = "zemljisniTipovi") val zemljisniTipovi: List<Zemljiste>,
-    @ColumnInfo(name = "onlineChecked") val onlineChecked: Boolean = false
+    @ColumnInfo(name = "onlineChecked") var onlineChecked: Boolean = false
 ) : Serializable {
 
     fun getLatinskiNaziv(): String {
@@ -83,15 +83,14 @@ data class Biljka(
 
             // Log.d("BUILDER Porodica", porodica)
             return Biljka(
-                0,
-                naziv,
-                porodica,
-                medicinskoUpozorenje,
-                medicinskeKoristi,
-                profilOkusa,
-                jela,
-                klimatskiTipovi,
-                zemljisniTipovi
+                naziv = naziv,
+                porodica = porodica,
+                medicinskoUpozorenje = medicinskoUpozorenje,
+                medicinskeKoristi = medicinskeKoristi,
+                profilOkusa = profilOkusa,
+                jela = jela,
+                klimatskiTipovi = klimatskiTipovi,
+                zemljisniTipovi = zemljisniTipovi
             )
         }
     }

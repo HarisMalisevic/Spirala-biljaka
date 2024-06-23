@@ -131,8 +131,9 @@ class TrefleDAO {
         fixMedicinskoUpozorenje(biljka, biljkaBuilder, trefleSpeciesResponse)
         fixZemljiste(biljka, biljkaBuilder, trefleSpeciesResponse)
         fixKlima(biljka, biljkaBuilder, trefleSpeciesResponse)
-
-        return biljkaBuilder.build()
+        val fixedBiljka = biljkaBuilder.build()
+        fixedBiljka.onlineChecked = true
+        return fixedBiljka
     }
 
     suspend fun getPlantsWithFlowerColor(flowerColor: String, substr: String): List<Biljka> {
