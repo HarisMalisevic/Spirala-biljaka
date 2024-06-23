@@ -10,8 +10,11 @@ import androidx.room.Query
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.Update
+import etf.rma.spirale.App
 import etf.rma.spirale.biljka.Biljka
 import etf.rma.spirale.biljka.BiljkaBitmap
+import etf.rma.spirale.dataPersistence.trefleAPI.TrefleDAO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -58,8 +61,6 @@ abstract class BiljkaDatabase : RoomDatabase() {
                     false
                 }
             }
-
-
         }
 
         @Insert
@@ -107,6 +108,22 @@ abstract class BiljkaDatabase : RoomDatabase() {
             } else {
                 null
             }
+        }
+
+        @Query("SELECT * FROM biljka where onlineChecked = 0")
+        suspend fun getUncheckedBiljke(): List<Biljka>
+
+        @Update
+        suspend fun updateBiljke(biljke: List<Biljka>)
+
+        suspend fun fixOfflineBiljka() : Int{
+            val uncheckedBiljke = getUncheckedBiljke()
+            val trefleDAO = TrefleDAO(App.context)
+            for (biljka in uncheckedBiljke) {
+                trefleDAO.fixData(biljka)
+            }
+            updateBiljke(uncheckedBiljke)
+            return uncheckedBiljke.size
         }
     }
 }

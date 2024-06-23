@@ -29,9 +29,6 @@ import etf.rma.spirale.R
 import etf.rma.spirale.dataPersistence.database.BiljkaDatabase
 import etf.rma.spirale.defaultBiljke
 import etf.rma.spirale.dataPersistence.trefleAPI.TrefleDAO
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
