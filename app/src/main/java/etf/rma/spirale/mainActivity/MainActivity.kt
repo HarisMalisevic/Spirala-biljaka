@@ -98,12 +98,17 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
                 setupResetBtn()
                 setupModSpinner()
                 setupBottomBar()
-                getBiljkaBitmaps()
                 filteredBiljke = radnaLista
                 refreshDisplayedBiljke()
             }
 
+            val job3 = launch {
+                getBiljkaBitmaps()
+            }
+
             job2.join()
+            job3.join()
+
         }
 
 
@@ -111,16 +116,19 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun getBiljkaBitmaps() {
-        val scope = CoroutineScope(Job() + Dispatchers.Main)
+
         for (biljka in radnaLista) {
-            scope.launch {
+            lifecycleScope.launch {
                 val image = trefleDAO.getImage(biljka)
 
-                slikeDefaultBiljaka[biljka.naziv] = image
 
-                biljkaDAO.addImage(biljka.id!!, image)
+                val job2 = launch {
+                    slikeDefaultBiljaka[biljka.naziv] = image
+                    biljkaDAO.addImage(biljka.id!!, image)
 
-                biljkeRVAdapter.notifyItemChanged(radnaLista.indexOf(biljka))
+                    biljkeRVAdapter.notifyItemChanged(radnaLista.indexOf(biljka))
+                }
+                job2.join()
             }
         }
     }
@@ -264,8 +272,8 @@ class MainActivity : AppCompatActivity(), BiljkeRVAdapter.RecyclerViewEvent {
 
             blockFiltering = true
 
-            val scope = CoroutineScope(Job() + Dispatchers.Main)
-            scope.launch {
+
+            lifecycleScope.launch {
                 val plantsFilteredByFlowerColor =
                     trefleDAO.getPlantsWithFlowerColor(flowerColor, substr)
                 biljkeRVAdapter.setBiljke(plantsFilteredByFlowerColor)

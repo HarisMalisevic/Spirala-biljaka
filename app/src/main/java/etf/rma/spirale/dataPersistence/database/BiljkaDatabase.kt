@@ -71,7 +71,7 @@ abstract class BiljkaDatabase : RoomDatabase() {
         @Query("SELECT * FROM biljka WHERE id = :idBiljke")
         suspend fun getBiljka(idBiljke: Long): Biljka?
 
-        @Query("SELECT * FROM biljka_bitmap WHERE idBiljke = :idBiljke")
+        @Query("SELECT * FROM BiljkaBitmap WHERE idBiljke = :idBiljke")
         suspend fun getBiljkaBitmap(idBiljke: Long): BiljkaBitmap?
 
         suspend fun addImage(idBiljke: Long, bitmap: Bitmap): Boolean {
@@ -92,7 +92,7 @@ abstract class BiljkaDatabase : RoomDatabase() {
         @Query("DELETE FROM biljka")
         suspend fun clearBiljkaTable()
 
-        @Query("DELETE FROM biljka_bitmap")
+        @Query("DELETE FROM BiljkaBitmap")
         suspend fun clearBiljkaBitmapTable()
 
         suspend fun clearData() {

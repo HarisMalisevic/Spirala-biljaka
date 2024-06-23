@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 data class Biljka(
     @PrimaryKey(autoGenerate = true) var id: Long? = null,
     @ColumnInfo(name = "naziv") val naziv: String,
-    @ColumnInfo(name = "porodica") val porodica: String,
+    @ColumnInfo(name = "family") val porodica: String,
     @ColumnInfo(name = "medicinskoUpozorenje") val medicinskoUpozorenje: String,
     @ColumnInfo(name = "medicinskeKoristi") val medicinskeKoristi: List<MedicinskaKorist>,
     @ColumnInfo(name = "profilOkusa") val profilOkusa: ProfilOkusaBiljke?,

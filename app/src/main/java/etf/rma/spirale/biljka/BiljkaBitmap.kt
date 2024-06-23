@@ -6,7 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "biljka_bitmap",
+    tableName = "BiljkaBitmap",
     foreignKeys = [
         ForeignKey(
             entity = Biljka::class,
