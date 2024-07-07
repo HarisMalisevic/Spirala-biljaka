@@ -14,7 +14,7 @@ object Constants {
 
     fun getDefaultBitmap(context: Context): Bitmap {
         return BitmapFactory.decodeResource(
-            context.resources, R.drawable.plant
+            context.resources, R.drawable.plant_1080p
         ).scale(300, 300)
     }
 

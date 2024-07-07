@@ -26,7 +26,7 @@ class BiljkeRVAdapter(
 
     private var currentView = medicinskiView
 
-    private var defaultBitmap: Bitmap = Constants.getDefaultBitmap(App.context)
+    private var defaultBitmap: Bitmap = Constants.getDefaultBitmap(App.context)!!
 
     fun setCurrentView(value: Int) {
         this.currentView = value
